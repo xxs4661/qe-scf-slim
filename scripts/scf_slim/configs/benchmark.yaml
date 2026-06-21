@@ -1,0 +1,37 @@
+systems:
+  - name: Al_111_2x2x4
+    template: "templates/Al_111_slab_scf.in"
+  - name: BaTiO3
+    template: "templates/BaTiO3_scf.in"
+  - name: Bi2Se3
+    template: "templates/Bi2Se3_scf.in"
+  - name: FeNi_L10
+    template: "templates/FeNi_L10_scf.in"
+  - name: Fe_001_2x2x4
+    template: "templates/Fe_001_2x2x4_slab_scf.in"
+  - name: Fe_bcc
+    template: "templates/Fe_bcc_scf.in"
+  - name: GaAs_zb
+    template: "templates/GaAs_zb_scf.in"
+  - name: MgO_rs
+    template: "templates/MgO_rs_scf.in"
+  - name: NaCl_rs
+    template: "templates/NaCl_rs_scf.in"
+  - name: Ni3Fe16_L12
+    template: "templates/Ni3Fe16_L12_scf.in"
+  - name: Ni3Fe_L12
+    template: "templates/Ni3Fe_L12_scf.in"
+  - name: Ni80Fe20_SQS16
+    template: "templates/Ni80Fe20_SQS16_scf.in"
+  - name: Ni_111
+    template: "templates/Ni_111_slab_scf.in"
+  - name: Ni_111_2x2x6
+    template: "templates/Ni_111_2x2x6_scf.in"
+  - name: Ni_fcc
+    template: "templates/Ni_fcc_scf.in"
+  - name: SiGe50_2x1x1
+    template: "templates/SiGe50_2x1x1_scf.in"
+  - name: SiGe50_2x1x1_16
+    template: "templates/SiGe50_2x1x1_16_scf.in"
+  - name: Si_diamond
+    template: "templates/Si_diamond_scf.in"

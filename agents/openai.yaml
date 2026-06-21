@@ -1,0 +1,4 @@
+interface:
+  display_name: "QE SCF Doctor"
+  short_description: "Diagnose QE setup and find practical SCF beta ranges."
+  default_prompt: "Use $scf to check my Quantum ESPRESSO pw.x/MPI/pseudo environment and find a practical mixing_beta friendly range."

@@ -1,0 +1,46 @@
+&CONTROL
+  calculation = 'scf'
+  prefix      = 'FeNi_L10_AUTO'      ! overwritten by script
+  outdir      = './'                 ! overwritten by script
+  wf_collect  = .false.
+  disk_io     = 'low'
+/
+&SYSTEM
+  ibrav   = 0
+  nat     = 4
+  ntyp    = 2
+  ecutwfc = 60
+  ecutrho = 480
+  occupations = 'smearing'
+  smearing    = 'mp'
+  degauss     = 0.02
+  nspin       = 2
+  starting_magnetization(1) = 0.60
+  starting_magnetization(2) = 0.30
+  input_dft   = 'PBE'
+/
+&ELECTRONS
+  diagonalization   = 'david'
+  mixing_mode       = 'plain'
+  mixing_beta       = 0.20
+  mixing_ndim       = 8
+  conv_thr          = 1.0d-8
+  electron_maxstep  = 100
+/
+ATOMIC_SPECIES
+  Fe 55.845  Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+  Ni 58.6934 Ni.pbe-spn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS (angstrom)
+  3.580  0.000  0.000
+  0.000  3.580  0.000
+  0.000  0.000  3.650
+
+ATOMIC_POSITIONS (crystal)
+  Fe  0.00 0.00 0.00
+  Ni  0.50 0.50 0.00
+  Fe  0.50 0.00 0.50
+  Ni  0.00 0.50 0.50
+
+K_POINTS automatic
+  6 6 6  0 0 0

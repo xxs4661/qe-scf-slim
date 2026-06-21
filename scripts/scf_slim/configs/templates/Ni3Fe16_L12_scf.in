@@ -1,0 +1,60 @@
+&CONTROL
+  calculation = 'scf'
+  prefix      = 'Ni3Fe16_L12_AUTO'   ! overwritten by script
+  outdir      = './'                 ! overwritten by script
+  wf_collect  = .false.
+  disk_io     = 'low'
+/
+&SYSTEM
+  ibrav   = 0
+  nat     = 16
+  ntyp    = 2
+  ecutwfc = 60
+  ecutrho = 480
+  occupations = 'smearing'
+  smearing    = 'mp'
+  degauss     = 0.05                 ! 将被阶段 σ 覆盖
+  nspin=2
+  starting_magnetization(1)=0.35
+  starting_magnetization(2)=0.80
+/
+&ELECTRONS
+  mixing_mode    = 'plain'           ! 我们的脚本会清洗/注入
+  mixing_beta    = 0.2               ! 将被算法覆盖
+  mixing_ndim    = 8
+  conv_thr       = 1.0d-8            ! 将被算法/目标覆盖
+  electron_maxstep = 200             ! 将被算法覆盖
+/
+ATOMIC_SPECIES
+  Ni 58.6934 Ni.pbe-spn-kjpaw_psl.1.0.0.UPF
+  Fe 55.845  Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+
+CELL_PARAMETERS (angstrom)
+  7.140  0.000  0.000     ! 2 * a,  a = 3.57 Å
+  0.000  7.140  0.000
+  0.000  0.000  3.570
+
+! L12: Fe 在角点（A 位），Ni 在面心（B 位）
+ATOMIC_POSITIONS (crystal)
+  Fe  0.00  0.00  0.00
+  Fe  0.50  0.00  0.00
+  Fe  0.00  0.50  0.00
+  Fe  0.50  0.50  0.00
+
+  Ni  0.25  0.25  0.00
+  Ni  0.75  0.25  0.00
+  Ni  0.25  0.75  0.00
+  Ni  0.75  0.75  0.00
+
+  Ni  0.25  0.00  0.50
+  Ni  0.25  0.50  0.50
+  Ni  0.75  0.00  0.50
+  Ni  0.75  0.50  0.50
+
+  Ni  0.00  0.25  0.50
+  Ni  0.00  0.75  0.50
+  Ni  0.50  0.25  0.50
+  Ni  0.50  0.75  0.50
+
+K_POINTS automatic
+  4 4 8  1 1 1

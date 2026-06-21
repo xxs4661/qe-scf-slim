@@ -1,0 +1,35 @@
+&CONTROL
+  calculation = 'scf',
+  prefix      = 'NaCl_rs',
+  pseudo_dir = './pseudos',
+  outdir      = './qe_tmp',
+  disk_io     = 'none',
+  wf_collect  = .false.,
+/
+&SYSTEM
+  ibrav=0, nat=8, ntyp=2,
+  ecutwfc=60, ecutrho=600,
+  input_dft='PBE',
+  occupations='fixed'
+/
+&ELECTRONS
+  conv_thr=1.0d-8, mixing_beta=0.20, electron_maxstep=120
+/
+ATOMIC_SPECIES
+Na 22.98977 Na.pbe-spn-kjpaw_psl.1.0.0.UPF
+Cl 35.45    Cl.pbe-n-kjpaw_psl.1.0.0.UPF
+CELL_PARAMETERS angstrom
+  5.640 0.000 0.000
+  0.000 5.640 0.000
+  0.000 0.000 5.640
+ATOMIC_POSITIONS crystal
+Na 0.0000 0.0000 0.0000
+Na 0.0000 0.5000 0.5000
+Na 0.5000 0.0000 0.5000
+Na 0.5000 0.5000 0.0000
+Cl 0.5000 0.5000 0.5000
+Cl 0.5000 0.0000 0.0000
+Cl 0.0000 0.5000 0.0000
+Cl 0.0000 0.0000 0.5000
+K_POINTS automatic
+8 8 8  0 0 0

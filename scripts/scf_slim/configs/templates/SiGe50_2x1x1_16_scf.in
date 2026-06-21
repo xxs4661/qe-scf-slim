@@ -1,0 +1,53 @@
+&CONTROL
+  calculation = 'scf'
+  prefix      = 'SiGe50_2x1x1_16_AUTO'
+  outdir      = './'
+  wf_collect  = .false.
+  disk_io     = 'low'
+/
+&SYSTEM
+  ibrav   = 0
+  nat     = 16
+  ntyp    = 2
+  ecutwfc = 55
+  ecutrho = 220
+  occupations = 'fixed'
+/
+&ELECTRONS
+  mixing_mode    = 'plain'
+  mixing_beta    = 0.2
+  conv_thr       = 1.0d-10          ! 半导体建议更严；算法会覆盖
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+  Si 28.0855 Si.pbe-n-rrkjus_psl.1.0.0.UPF
+  Ge 72.6300 Ga.pbe-dn-kjpaw_psl.1.0.0.UPF
+
+! supercell: 2x1x1 of diamond conventional cell (a ≈ 5.545 Å)
+CELL_PARAMETERS (angstrom)
+  11.090  0.000  0.000
+  0.000   5.545  0.000
+  0.000   0.000  5.545
+
+! 16 原子；x<0.5 放 Si，x>=0.5 放 Ge（简易 50/50 排列；若做性质建议用 SQS）
+ATOMIC_POSITIONS (crystal)
+  Si  0.000  0.000  0.000
+  Si  0.000  0.500  0.500
+  Si  0.250  0.000  0.500
+  Si  0.250  0.500  0.000
+  Si  0.125  0.250  0.250
+  Si  0.125  0.750  0.750
+  Si  0.375  0.250  0.750
+  Si  0.375  0.750  0.250
+
+  Ge  0.500  0.000  0.000
+  Ge  0.500  0.500  0.500
+  Ge  0.750  0.000  0.500
+  Ge  0.750  0.500  0.000
+  Ge  0.625  0.250  0.250
+  Ge  0.625  0.750  0.750
+  Ge  0.875  0.250  0.750
+  Ge  0.875  0.750  0.250
+
+K_POINTS automatic
+  4 4 4  0 0 0

@@ -1,0 +1,58 @@
+&CONTROL
+  calculation = 'scf',
+  prefix = 'SiGe50',
+  pseudo_dir = './pseudos',
+  outdir = './work',
+  disk_io = 'none',
+  verbosity = 'high'
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 16, ntyp = 2,
+  ecutwfc = 55,
+  ecutrho = 440,           ! USPP 可 8x；PAW 可 ~4x
+  occupations = 'fixed',   ! 非金属：固定占据
+  nspin = 1
+/
+&ELECTRONS
+  diagonalization = 'david',
+  mixing_mode = 'plain',
+  mixing_beta = 0.400000,  ! Bandit 将覆盖
+  mixing_ndim = 8,
+  conv_thr = 1.0d-6,       ! runner 将覆盖
+  electron_maxstep = 50    ! runner 将覆盖
+/
+ATOMIC_SPECIES
+  Si 28.0855 Si.pbe-n-rrkjus_psl.1.0.0.UPF
+  Ge 72.6300 Ga.pbe-dn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+  10.9600 0.0000 0.0000   ! 2*a , a≈5.480 Å（Si0.5Ge0.5 近似）
+  0.0000  5.4800 0.0000
+  0.0000  0.0000 5.4800
+
+ATOMIC_POSITIONS crystal
+  ! diamond conventional cell (8 atoms) × 2 along x → 16 atoms，Si/Ge 各 8
+  ! 基本8点：{(0,0,0),(0,1/2,1/2),(1/2,0,1/2),(1/2,1/2,0)} + (1/4,1/4,1/4) 平移
+  ! 复制沿 x (Nx=2): x'=(x+i)/2, i=0,1
+
+  Si 0.0000  0.0000  0.0000
+  Si 0.0000  0.5000  0.5000
+  Si 0.5000  0.0000  0.5000
+  Si 0.5000  0.5000  0.0000
+  Si 0.2500  0.2500  0.2500
+  Si 0.2500  0.7500  0.7500
+  Si 0.7500  0.2500  0.7500
+  Si 0.7500  0.7500  0.2500
+
+  Ge 0.5000  0.0000  0.0000
+  Ge 0.5000  0.5000  0.5000
+  Ge 0.7500  0.0000  0.5000
+  Ge 0.7500  0.5000  0.0000
+  Ge 0.6250  0.2500  0.2500
+  Ge 0.6250  0.7500  0.7500
+  Ge 0.8750  0.2500  0.7500
+  Ge 0.8750  0.7500  0.2500
+
+K_POINTS automatic
+  6 6 6  0 0 0

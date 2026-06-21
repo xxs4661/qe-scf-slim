@@ -1,0 +1,55 @@
+&CONTROL
+  calculation = 'scf'
+  prefix = 'Bi2Se3_hexconv_15_SOC'
+  outdir = './'
+  wf_collect = .false.
+  disk_io = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 15
+  ntyp = 2
+  ecutwfc = 55
+  ecutrho = 440
+  occupations = 'fixed'
+  noncolin = .true.
+  lspinorb = .true.
+/
+&ELECTRONS
+  mixing_mode = 'plain'
+  mixing_beta = 0.4
+  mixing_ndim = 4
+  conv_thr = 1.0d-8
+  electron_maxstep = 200
+  startingwfc = 'atomic'
+/
+ATOMIC_SPECIES
+  Bi 208.9804 Bi.rel-pbe-dn-kjpaw_psl.1.0.0.UPF
+  Se 78.971  Se.rel-pbe-dn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS (angstrom)
+  4.143000  0.000000  0.000000
+ -2.071500  3.587943  0.000000
+  0.000000  0.000000 28.636000
+
+ATOMIC_POSITIONS (crystal)
+  Bi 0.000000 0.000000 0.399000
+  Bi 0.000000 0.000000 0.601000
+  Bi 0.666667 0.333333 0.732333
+  Bi 0.666667 0.333333 0.934333
+  Bi 0.333333 0.666667 0.065667
+  Bi 0.333333 0.666667 0.267667
+
+  Se 0.000000 0.000000 0.000000
+  Se 0.666667 0.333333 0.333333
+  Se 0.333333 0.666667 0.666667
+
+  Se 0.000000 0.000000 0.211000
+  Se 0.000000 0.000000 0.789000
+  Se 0.666667 0.333333 0.544333
+  Se 0.666667 0.333333 0.122333
+  Se 0.333333 0.666667 0.877667
+  Se 0.333333 0.666667 0.455667
+
+K_POINTS automatic
+  6 6 2 0 0 0

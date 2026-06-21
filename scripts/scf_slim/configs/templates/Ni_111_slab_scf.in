@@ -1,0 +1,66 @@
+&CONTROL
+  calculation = 'scf'
+  prefix      = 'Ni_111_2x2x4_FIX'
+  outdir      = './'
+  wf_collect  = .false.
+  disk_io     = 'low'
+/
+
+&SYSTEM
+  ibrav   = 0
+  nat     = 16
+  ntyp    = 1
+
+  ecutwfc = 60
+  ecutrho = 480
+
+  occupations = 'smearing'
+  smearing    = 'mv'
+  degauss     = 0.02
+
+  nspin = 1
+/
+
+&ELECTRONS
+  mixing_mode    = 'local-TF'
+  mixing_beta    = 0.10
+  mixing_ndim    = 8
+  conv_thr       = 1.0d-8
+  electron_maxstep = 200
+/
+
+ATOMIC_SPECIES
+  Ni 58.6934 Ni.pbe-spn-kjpaw_psl.1.0.0.UPF
+
+! fcc-Ni (111) 2x2 surface, 4 layers (A-B-C-A)
+! a=3.520 A, a_surf=a/sqrt(2)=2.4890 A, d111=a/sqrt(3)=2.0323 A
+! supercell: a1=(2*a_surf,0,0), a2=(a_surf, sqrt(3)*a_surf,0), a3=(0,0, 3*d111 + 15 A)
+CELL_PARAMETERS (angstrom)
+  4.9780  0.0000  0.0000
+  2.4890  4.3111  0.0000
+  0.0000  0.0000 21.0968
+
+! IMPORTANT: corrected ABC stacking using crystal coords
+ATOMIC_POSITIONS (crystal)
+  Ni  0.000000  0.000000  0.355504
+  Ni  0.500000  0.000000  0.355504
+  Ni  0.000000  0.500000  0.355504
+  Ni  0.500000  0.500000  0.355504
+
+  Ni  0.166667  0.166667  0.451836
+  Ni  0.666667  0.166667  0.451836
+  Ni  0.166667  0.666667  0.451836
+  Ni  0.666667  0.666667  0.451836
+
+  Ni  0.333333  0.333333  0.548164
+  Ni  0.833333  0.333333  0.548164
+  Ni  0.333333  0.833333  0.548164
+  Ni  0.833333  0.833333  0.548164
+
+  Ni  0.000000  0.000000  0.644496
+  Ni  0.500000  0.000000  0.644496
+  Ni  0.000000  0.500000  0.644496
+  Ni  0.500000  0.500000  0.644496
+
+K_POINTS automatic
+  6 6 1  0 0 0

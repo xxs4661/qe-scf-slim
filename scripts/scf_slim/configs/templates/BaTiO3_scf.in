@@ -1,0 +1,57 @@
+&CONTROL
+  calculation = 'scf'
+  prefix = 'BaTiO3_P4mm_2x2x1'
+  outdir = './'
+  wf_collect = .false.
+  disk_io = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 20
+  ntyp = 3
+  ecutwfc = 80
+  ecutrho = 640
+  occupations = 'fixed'
+/
+&ELECTRONS
+  mixing_mode = 'plain'
+  mixing_beta = 0.4
+  mixing_ndim = 8
+  conv_thr = 1.0d-8
+  electron_maxstep = 200
+  startingwfc = 'atomic'
+/
+ATOMIC_SPECIES
+  Ba 137.327 Ba.pbe-spn-kjpaw_psl.1.0.0.UPF
+  Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+  O 15.999 O.pbe-n-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS (angstrom)
+  7.9976 0.0000 0.0000
+  0.0000 7.9976 0.0000
+  0.0000 0.0000 4.0222
+
+ATOMIC_POSITIONS (crystal)
+  Ba 0.00000 0.00000 0.00000
+  Ti 0.25000 0.25000 0.50210
+  O 0.25000 0.25000 0.98470
+  O 0.25000 0.00000 0.51300
+  O 0.00000 0.25000 0.51300
+  Ba 0.50000 0.00000 0.00000
+  Ti 0.75000 0.25000 0.50210
+  O 0.75000 0.25000 0.98470
+  O 0.75000 0.00000 0.51300
+  O 0.50000 0.25000 0.51300
+  Ba 0.00000 0.50000 0.00000
+  Ti 0.25000 0.75000 0.50210
+  O 0.25000 0.75000 0.98470
+  O 0.25000 0.50000 0.51300
+  O 0.00000 0.75000 0.51300
+  Ba 0.50000 0.50000 0.00000
+  Ti 0.75000 0.75000 0.50210
+  O 0.75000 0.75000 0.98470
+  O 0.75000 0.50000 0.51300
+  O 0.50000 0.75000 0.51300
+
+K_POINTS automatic
+  3 3 6 0 0 0

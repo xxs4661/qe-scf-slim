@@ -1,0 +1,59 @@
+&CONTROL
+  calculation = 'scf'
+  prefix      = 'Fe_001_2x2x4_AUTO'
+  outdir      = './'
+  wf_collect  = .false.
+  disk_io     = 'low'
+/
+&SYSTEM
+  ibrav   = 0
+  nat     = 16
+  ntyp    = 1
+  ecutwfc = 40
+  ecutrho = 320
+  occupations = 'smearing'
+  smearing    = 'mp'
+  degauss     = 0.05
+  nspin = 2
+  starting_magnetization(1) = 0.6
+/
+&ELECTRONS
+  mixing_mode    = 'plain'
+  mixing_beta    = 0.2
+  mixing_ndim    = 8
+  conv_thr       = 1.0d-8
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+  Fe 55.8450 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+
+! bcc-Fe (001) 2x2 surface, 4 layers (A-B-A-B)；a=2.866 Å
+! 超胞: a1=(2a,0,0), a2=(0,2a,0), a3=(0,0,2a + 15 Å)
+CELL_PARAMETERS (angstrom)
+  5.732  0.000  0.000
+  0.000  5.732  0.000
+  0.000  0.000 20.732    ! 若要精确 15 Å 真空，可改为 19.299
+
+ATOMIC_POSITIONS (angstrom)
+  Fe  0.000  0.000  8.2165
+  Fe  2.866  0.000  8.2165
+  Fe  0.000  2.866  8.2165
+  Fe  2.866  2.866  8.2165
+
+  Fe  1.433  1.433  9.6495
+  Fe  4.299  1.433  9.6495
+  Fe  1.433  4.299  9.6495
+  Fe  4.299  4.299  9.6495
+
+  Fe  0.000  0.000 11.0825
+  Fe  2.866  0.000 11.0825
+  Fe  0.000  2.866 11.0825
+  Fe  2.866  2.866 11.0825
+
+  Fe  1.433  1.433 12.5155
+  Fe  4.299  1.433 12.5155
+  Fe  1.433  4.299 12.5155
+  Fe  4.299  4.299 12.5155
+
+K_POINTS automatic
+  4 4 1  0 0 0

@@ -1,0 +1,61 @@
+&CONTROL
+  calculation = 'scf',
+  prefix = 'Ni80Fe20',
+  pseudo_dir = './pseudos',
+  outdir = './work',
+  disk_io = 'none',
+  verbosity = 'high'
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 16, ntyp = 2,
+  ecutwfc = 50,
+  ecutrho = 500,           ! 若用 PAW 可降到 ~4*ecutwfc；USPP 建议 8x-12x
+  occupations = 'smearing',
+  smearing = 'gaussian',
+  degauss = 0.035,         ! Bandit 将覆盖
+  nspin = 2,
+  starting_magnetization(1)=0.60,
+  starting_magnetization(1)=2.40
+/
+&ELECTRONS
+  diagonalization = 'david',
+  mixing_mode = 'plain',
+  mixing_beta = 0.200000,  ! Bandit 将覆盖
+  mixing_ndim = 12,
+  conv_thr = 1.0d-6,       ! runner 将覆盖
+  electron_maxstep = 100   ! runner 将覆盖
+/
+ATOMIC_SPECIES
+  Ni 58.6934 Ni.pbe-spn-kjpaw_psl.1.0.0.UPF
+  Fe 55.845  Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+
+CELL_PARAMETERS angstrom
+  7.0800 0.0000 0.0000   ! 2*a0 with a0=3.540 Å (Permalloy)
+  0.0000 7.0800 0.0000
+  0.0000 0.0000 3.5400
+
+ATOMIC_POSITIONS crystal
+  Ni  0.00  0.00  0.00
+  Ni  0.00  0.25  0.50
+  Fe  0.25  0.00  0.50   ! Fe #1
+  Ni  0.25  0.25  0.00
+  Ni  0.50  0.00  0.00
+  Ni  0.50  0.25  0.50
+  Ni  0.75  0.00  0.50
+  Ni  0.75  0.25  0.00
+  Fe  0.00  0.50  0.00   ! Fe #2
+  Ni  0.00  0.75  0.50
+  Ni  0.25  0.50  0.50
+  Ni  0.25  0.75  0.00
+  Ni  0.50  0.50  0.00
+  Fe  0.50  0.75  0.50   ! Fe #3
+  Ni  0.75  0.50  0.50
+  Ni  0.75  0.75  0.00
+
+K_POINTS automatic
+  4 4 4  0 0 0
+
+# 磁性初猜（可选；runner不覆盖）
+# starting_magnetization(Ni) = 0.55
+# starting_magnetization(Fe) = 0.80

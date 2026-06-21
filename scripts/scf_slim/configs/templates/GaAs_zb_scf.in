@@ -1,0 +1,35 @@
+&CONTROL
+  calculation = 'scf',
+  prefix      = 'GaAs_zb',
+  pseudo_dir = './pseudos',
+  outdir      = './qe_tmp',
+  disk_io     = 'none',
+  wf_collect  = .false.,  
+/
+&SYSTEM
+  ibrav=0, nat=8, ntyp=2,
+  ecutwfc=60, ecutrho=600,
+  input_dft='PBE',
+  occupations='fixed'
+/
+&ELECTRONS
+  conv_thr=1.0d-8, mixing_beta=0.20, electron_maxstep=120
+/
+ATOMIC_SPECIES
+Ga 69.723 Ga.pbe-dn-kjpaw_psl.1.0.0.UPF
+As 74.922 As.pbe-n-rrkjus_psl.0.2.UPF
+CELL_PARAMETERS angstrom
+  5.653 0.000 0.000
+  0.000 5.653 0.000
+  0.000 0.000 5.653
+ATOMIC_POSITIONS crystal
+Ga 0.0000 0.0000 0.0000
+Ga 0.0000 0.5000 0.5000
+Ga 0.5000 0.0000 0.5000
+Ga 0.5000 0.5000 0.0000
+As 0.2500 0.2500 0.2500
+As 0.2500 0.7500 0.7500
+As 0.7500 0.2500 0.7500
+As 0.7500 0.7500 0.2500
+K_POINTS automatic
+8 8 8  0 0 0

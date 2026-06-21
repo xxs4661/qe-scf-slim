@@ -1,0 +1,66 @@
+&CONTROL
+  calculation = 'scf'
+  prefix      = 'Al_111_2x2x4_AUTO'
+  outdir      = './'
+  wf_collect  = .false.
+  disk_io     = 'low'
+/
+&SYSTEM
+  ibrav   = 0
+  nat     = 16
+  ntyp    = 1
+
+  ! 笔电友好：先用中等 ecut 起步（具体还要看你的赝势推荐值）
+  ecutwfc = 30
+  ecutrho = 240
+
+  occupations = 'smearing'
+  smearing    = 'mp'
+  degauss     = 0.02
+/
+&ELECTRONS
+  mixing_mode      = 'local-TF'
+  mixing_beta      = 0.2
+  mixing_ndim      = 2
+  conv_thr         = 1.0d-8
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+  Al 26.9815 Al.pbe-n-kjpaw_psl.1.0.0.UPF
+
+! fcc-Al (111) 2x2 surface, 4 layers (A-B-C-A) ; a0 = 4.05 Å (typical PBE)
+! 2D in-plane lattice: a_surf = a0/sqrt(2) = 2.863782 Å
+! Interlayer spacing (111): d = a0/sqrt(3) = 2.338269 Å
+! Supercell:
+!   a1 = (2*a_surf, 0, 0)
+!   a2 = (a_surf, a_surf*sqrt(3), 0)
+!   a3 = (0, 0, 3*d + 15 Å vacuum)  -> vacuum ~15 Å
+
+CELL_PARAMETERS (angstrom)
+  5.727565  0.000000  0.000000
+  2.863782  4.960217  0.000000
+  0.000000  0.000000 22.014806    ! 若想更省时可适当减小真空（会影响表面相互作用）
+
+ATOMIC_POSITIONS (angstrom)
+  Al  0.000000  0.000000  7.500000
+  Al  2.863782  0.000000  7.500000
+  Al  1.431891  2.480108  7.500000
+  Al  4.295673  2.480108  7.500000
+
+  Al  1.431891  0.826703  9.838269
+  Al  4.295673  0.826703  9.838269
+  Al  2.863782  3.306811  9.838269
+  Al  0.000000  3.306811  9.838269
+
+  Al  2.863782  1.653405 12.176537
+  Al  0.000000  1.653405 12.176537
+  Al  4.295673  4.133514 12.176537
+  Al  1.431891  4.133514 12.176537
+
+  Al  0.000000  0.000000 14.514806
+  Al  2.863782  0.000000 14.514806
+  Al  1.431891  2.480108 14.514806
+  Al  4.295673  2.480108 14.514806
+
+K_POINTS automatic
+  4 4 1  0 0 0

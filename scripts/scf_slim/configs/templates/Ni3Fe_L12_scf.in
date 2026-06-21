@@ -1,0 +1,36 @@
+
+&CONTROL
+  calculation = 'scf',
+  prefix      = 'Ni3Fe_L12',
+  pseudo_dir = './pseudos',
+  outdir      = './qe_tmp',
+  disk_io     = 'none',
+  wf_collect  = .false.,
+/
+&SYSTEM
+  ibrav=0, nat=4, ntyp=2,
+  ecutwfc=60, ecutrho=600,
+  input_dft='PBE',
+  occupations='smearing', smearing='gaussian', degauss=0.02,
+  nspin=2,
+  starting_magnetization(1)=0.30,
+  starting_magnetization(2)=0.60
+/
+&ELECTRONS
+  ! conv_thr will be injected at runtime (config electron.conv_thr_stage1), do not fix here
+  mixing_beta=0.20, electron_maxstep=120
+/
+ATOMIC_SPECIES
+Ni 58.6934 Ni.pbe-spn-kjpaw_psl.1.0.0.UPF
+Fe 55.845  Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+CELL_PARAMETERS angstrom
+  3.580 0.000 0.000
+  0.000 3.580 0.000
+  0.000 0.000 3.580
+ATOMIC_POSITIONS crystal
+Fe 0.0000 0.0000 0.0000
+Ni 0.5000 0.5000 0.0000
+Ni 0.5000 0.0000 0.5000
+Ni 0.0000 0.5000 0.5000
+K_POINTS automatic
+12 12 12  0 0 0

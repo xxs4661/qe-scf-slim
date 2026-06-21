@@ -1,0 +1,35 @@
+&CONTROL
+  calculation = 'scf',
+  prefix      = 'MgO_rs',
+  pseudo_dir = './pseudos',
+  outdir      = './qe_tmp',
+  disk_io     = 'none',
+  wf_collect  = .false.,
+/
+&SYSTEM
+  ibrav=0, nat=8, ntyp=2,
+  ecutwfc=60, ecutrho=600,
+  input_dft='PBE',
+  occupations='fixed'
+/
+&ELECTRONS
+  conv_thr=1.0d-8, mixing_beta=0.20, electron_maxstep=120
+/
+ATOMIC_SPECIES
+Mg 24.305 Mg.pbe-n-kjpaw_psl.0.3.0.UPF
+O  15.999 O.pbe-n-kjpaw_psl.0.1.UPF
+CELL_PARAMETERS angstrom
+  4.212 0.000 0.000
+  0.000 4.212 0.000
+  0.000 0.000 4.212
+ATOMIC_POSITIONS crystal
+Mg 0.0000 0.0000 0.0000
+Mg 0.0000 0.5000 0.5000
+Mg 0.5000 0.0000 0.5000
+Mg 0.5000 0.5000 0.0000
+O  0.5000 0.5000 0.5000
+O  0.5000 0.0000 0.0000
+O  0.0000 0.5000 0.0000
+O  0.0000 0.0000 0.5000
+K_POINTS automatic
+8 8 8  0 0 0

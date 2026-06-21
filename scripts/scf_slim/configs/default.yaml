@@ -1,0 +1,78 @@
+preset: default
+
+qe:
+  # Set pw to an absolute pw.x path, or keep pw.x if it is on PATH.
+  mpirun: null
+  pw: "pw.x"
+  np: 1
+  extra_args: []
+  env:
+    OMP_NUM_THREADS: "1"
+    ESPRESSO_PSEUDO: "/path/to/pseudos"
+
+task:
+  beta_range: [0.01, 1.00]
+  fixed_degauss: 0.02
+  # Cheap residual target for comparing beta values and near-target early stop.
+  # Tighten this for stricter beta probes; loosen it for faster coarse diagnosis.
+  target_residual_ry: 1.0e-4
+  # QE conv_thr injected into probe inputs. Guards may stop once target_residual_ry
+  # is reached and confirmed, before a full production-quality SCF is complete.
+  probe_conv_thr_ry: 1.0e-8
+  # QE conv_thr used only by the optional final verification run.
+  final_conv_thr_ry: 1.0e-8
+  electron_maxstep: 160
+  episode_timeout_s: 7200
+  mixing_mode: local-TF
+  seed_from_file: false
+  extra_steps_after_target: 3
+
+search:
+  strategy: sequential
+  beta_decimals: 2
+  n_anchors: 7
+  max_evals: 12
+  min_dist: 0.01
+  stop_bracket_width: 0.02
+
+presearch:
+  enabled: false
+  num_buckets: 2
+  min_span_for_presearch: 0.30
+  n_anchors: 7
+
+bucket:
+  num_buckets: 2
+  min_span: 0.20
+  edge_probe_first: false
+  edge_improve_stop_steps: 0.0
+  skip_bucket_s4_margin: null
+
+budget:
+  per_bucket_eval_max: 6
+
+verify:
+  enabled: true
+  inherit_seed: false
+  timeout_s: 7200
+
+output:
+  plots: true
+  keep_light_seed: true
+
+# Values here are applied after preset defaults. Use this when you want
+# preset: smoke/thorough but still need to force a specific advanced value.
+overrides: {}
+
+guards:
+  near_stop_enabled: true
+  near_graceful_exit: false
+  osc_enabled: true
+  diverge_ratio: 3.5
+  plateau_patience_steps: 20
+  neg_rho_guard_enabled: true
+  neg_rho_abs_tol: 0.02
+  neg_rho_rel_tol: 0.0
+  neg_rho_patience: 20
+
+system_overrides: {}

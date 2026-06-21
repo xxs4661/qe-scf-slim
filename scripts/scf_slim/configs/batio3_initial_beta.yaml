@@ -1,0 +1,55 @@
+preset: smoke
+
+qe:
+  mpirun: null
+  pw: "pw.x"
+  np: 1
+  extra_args: []
+  env:
+    OMP_NUM_THREADS: "1"
+    ESPRESSO_PSEUDO: "/path/to/pseudos"
+
+task:
+  beta_range: [0.20, 0.60]
+  fixed_degauss: null
+  # Cheap residual target for comparing beta values in this initial diagnostic.
+  target_residual_ry: 1.0e-4
+  # QE conv_thr injected into probe inputs; guards can still stop at target_residual_ry.
+  probe_conv_thr_ry: 1.0e-8
+  # QE conv_thr used only if final verification is enabled.
+  final_conv_thr_ry: 1.0e-8
+  electron_maxstep: 80
+  episode_timeout_s: 1200
+  mixing_mode: plain
+  seed_from_file: false
+  extra_steps_after_target: 3
+
+overrides:
+  task:
+    electron_maxstep: 80
+    episode_timeout_s: 1200
+    extra_steps_after_target: 3
+  search:
+    strategy: bucket
+    n_anchors: 5
+    max_evals: 11
+    stop_bracket_width: 0.02
+  presearch:
+    enabled: true
+    num_buckets: 2
+    min_span_for_presearch: 0.30
+    n_anchors: 5
+  bucket:
+    num_buckets: 2
+    min_span: 0.20
+    edge_probe_first: true
+    edge_improve_stop_steps: 2.0
+    skip_bucket_s4_margin: 10.0
+  budget:
+    per_bucket_eval_max: 4
+  verify:
+    enabled: false
+  output:
+    plots: false
+
+system_overrides: {}
