@@ -1,134 +1,42 @@
 # QE SCF Slim
 
-QE SCF Slim is a small diagnostic wrapper for Quantum ESPRESSO `pw.x` SCF runs.
-Its main purpose is to cut down the manual trial-and-error around
-`mixing_beta`.
+QE SCF Slim is an evidence-backed diagnostic wrapper for Quantum ESPRESSO `pw.x` SCF calculations. It automates bounded `mixing_beta` probes, terminates clearly unproductive runs, records raw evidence, and reports either a verified recommendation, a clearly labelled probe-only result, or no recommendation.
 
-In a typical difficult SCF setup, the slow part is not editing one input file.
-It is the loop around it: choose a beta, run `pw.x`, watch whether the residual
-falls or blows up, stop hopeless runs, record the useful evidence, pick the next
-beta, and repeat. QE SCF Slim automates that loop enough to answer the practical
-question:
+Version **0.2.0** is a reliability release. It does not claim to find a mathematically optimal beta and does not replace physical convergence testing.
 
-> Which beta values are safe enough to use for this system, on this QE setup,
-> with this template?
+## Reliability model
 
-The tool first checks that the runtime environment is plausible, then runs a
-bounded set of guarded probes. Those probes are judged against a deliberately
-loose and relatively cheap residual target, so beta values can be compared
-without paying for a full production SCF at every trial point. The output is a
-usable beta range, a suggested default, and the raw evidence behind the
-recommendation.
+A beta is no longer accepted merely because one residual once crossed the diagnostic threshold. A feasible probe must reach `task.target_residual_ry`, stop for an accepted reason, retain a stable raw residual tail, remain below the rebound allowance, avoid an upward tail trend, and avoid fatal QE/runtime diagnostics. Tail regression is signed: a positive `decay_rate` means the residual is decreasing.
 
-It does not try to replace physical convergence testing, and it does not claim
-that one beta is mathematically best. After the diagnostic run finishes, use
-the recommended beta in a separate full SCF calculation with the convergence
-thresholds required by your actual study.
+The recommendation JSON uses explicit states:
 
-## Manual work it replaces
+| `recommendation_status` | Meaning |
+|---|---|
+| `verified` | The selected beta passed the optional full SCF verification. |
+| `probe_only` | The diagnostic probes produced a candidate, but verification was disabled. |
+| `verification_failed` | Probe evidence existed, but full verification failed; `recommended_beta` is `null`. |
+| `no_feasible_beta` | No probe met the stability requirements. |
+| `runtime_error` | A fatal input, pseudo, launcher, executable, or QE failure stopped the search. |
 
-Without this tool, beta tuning usually means doing these steps by hand:
+`best_observed_beta` is the fastest stable sampled point. `probe_recommended_beta` may prefer the center of a robust sampled segment within the configured S4 tolerance. `observed_safe_interval` is emitted only when multiple sufficiently close successful samples support it; search buckets and sampling brackets are never presented as proven safe ranges.
 
-1. Edit `mixing_beta` in a QE input.
-2. Launch `pw.x`, sometimes through MPI.
-3. Watch the SCF residuals for divergence, oscillation, stalls, timeouts, or
-   negative-rho warnings.
-4. Kill runs that are obviously going nowhere.
-5. Save the final residual, number of steps, stop reason, and output path.
-6. Decide which beta to try next.
-7. Repeat until a usable range is clear.
+## Automatic preflight
 
-QE SCF Slim keeps that workflow explicit, but makes it reproducible. It renders
-the input files, monitors the run, stops bad probes early, writes the summaries,
-and chooses the next beta from a small deterministic search plan.
+Normal runs validate the beta range, thresholds, canonical namelist order, required QE cards, `pw.x`, launcher configuration, seed availability, and the exact UPF filenames referenced by `ATOMIC_SPECIES`. The result is saved as `preflight.json` before expensive probes begin.
 
-## How the workflow works
+## Template preservation
 
-1. **Doctor check**: find `pw.x`, MPI launchers, and pseudopotential directories
-   before starting expensive SCF probes.
-2. **Template rendering**: keep your QE template, but inject the beta, output
-   directory, convergence threshold, electron max steps, and selected
-   `mixing_mode`.
-3. **Guarded probes**: run candidate betas while monitoring the live QE output.
-   A probe can stop early on timeout, divergence, persistent oscillation,
-   plateau, near-target residual, or excessive negative rho. The near-target
-   residual is intentionally cheaper than a production SCF threshold.
-4. **Coarse search**: start from a small set of broad beta anchors instead of a
-   dense grid.
-5. **Bucket refinement**: refine only the region that looks useful, then stop
-   when the bracket or budget is small enough.
-6. **Recommendation**: write a beta range and default beta backed by
-   `summary.csv`, `console.log`, `<system>_recommendation.json`, and per-job
-   `scf.out` files.
-
-## What it checks
-
-- `pw.x`, MPI launchers, and pseudopotential directories.
-- QE SCF templates rendered with different `mixing_beta` values.
-- Probe runs that diverge, oscillate, stall, time out, or hit negative-rho
-  warnings.
-- Coarse beta anchors followed by deterministic bucket refinement.
-- Run artifacts: `summary.csv`, `console.log`, residual plots, per-job
-  `scf.out`, and `<system>_recommendation.json`.
-
-## What it does not tune
-
-If every beta fails, the next step is usually not a finer beta scan. Check the
-structure, pseudopotentials, cutoffs, k-points, occupations, charge/spin setup,
-smearing, and runtime/MPI configuration first.
-
-This tool is deliberately focused on SCF beta diagnostics. It does not replace
-cutoff convergence, k-point convergence, pseudopotential validation, relax or
-vc-relax testing, or a final production-quality SCF input review.
-
-## Probe threshold vs final SCF threshold
-
-QE SCF Slim uses a cheap residual target to compare beta values. By default,
-that target is:
+The defaults no longer silently replace the template's smearing width or mixing scheme:
 
 ```yaml
 task:
-  target_residual_ry: 1.0e-4
+  fixed_degauss: null
+  mixing_mode: null
 ```
 
-Edit `task.target_residual_ry` in `scripts/scf_slim/configs/default.yaml` or in
-your copied config to change the threshold used for beta scoring and near-target
-early stopping. A smaller value makes beta probes more expensive; a larger value
-makes them cheaper but less discriminating.
+Set either value explicitly only when every probe should use that override.
 
-There are two related settings:
-
-- `task.probe_conv_thr_ry`: the QE `conv_thr` injected into each probe input.
-  The default is stricter than `target_residual_ry`; with guards enabled, probes
-  can still stop once they have reached the cheaper target and a few confirming
-  steps.
-- `task.final_conv_thr_ry`: the QE `conv_thr` used only by the tool's optional
-  final verification run.
-
-For production data, do not stop at the diagnostic recommendation. Take the
-recommended beta, put it in your real QE input, and run a normal SCF calculation
-with the `conv_thr`, cutoffs, k-points, occupations, and other settings required
-by your accuracy target.
-
-## Repository layout
-
-- `SKILL.md`: Codex skill instructions.
-- `agents/openai.yaml`: Codex UI metadata.
-- `scripts/scf_slim/run_scf.py`: CLI entry point.
-- `scripts/scf_slim/scfopt/`: core diagnostic package.
-- `scripts/scf_slim/configs/`: example configs and QE templates.
-- `tests/`: smoke and unit tests that do not require a working QE install.
-
-## Requirements
-
-- Python 3.10 or newer.
-- PyYAML and Matplotlib.
-- Quantum ESPRESSO `pw.x` for real SCF runs.
-- MPI launcher such as `mpirun`, `mpiexec`, or `srun` only when your QE setup
-  needs it.
-- UPF pseudopotentials compatible with your templates.
-
-## Install
+## Installation
 
 ```bash
 python3 -m venv .venv
@@ -137,88 +45,97 @@ python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 ```
 
-For a quick local checkout, installing `scripts/scf_slim/requirements.txt` is
-also enough to run the source CLI directly.
-
-## Codex skill use
-
-Place this repository at:
+Runtime dependencies are PyYAML, Matplotlib, and psutil. Real probes additionally require Quantum ESPRESSO `pw.x` and the exact UPF files used by the template.
 
 ```bash
-~/.codex/skills/scf
+scf-slim --version
+scf-slim --doctor --config scripts/scf_slim/configs/default.yaml
 ```
 
-Then ask Codex to use `$scf` when working on QE SCF diagnostics.
+## Run
 
-## Quick smoke checks
-
-These commands do not run a real SCF calculation:
+Edit `scripts/scf_slim/configs/default.yaml`, especially `qe.pw`, launcher settings, `qe.env.ESPRESSO_PSEUDO`, `task.beta_range`, the diagnostic target, and `verify.enabled`.
 
 ```bash
-cd scripts/scf_slim
-python run_scf.py --doctor --doctor-json --doctor-no-run-check --config configs/default.yaml
-python run_scf.py --bench configs/benchmark.yaml --list-systems
-python run_scf.py --config configs/batio3_initial_beta.yaml --bench configs/benchmark.yaml --system BaTiO3 --outdir /tmp/scf_slim_smoke --dry-run
-```
-
-## Running a probe
-
-First update `configs/default.yaml` or a copied config:
-
-- `qe.pw`
-- `qe.mpirun` and `qe.np` if using MPI
-- `qe.env.ESPRESSO_PSEUDO`
-- `task.beta_range`
-- `task.target_residual_ry` for the cheap beta-test target
-- `preset`
-
-Then run from `scripts/scf_slim`:
-
-```bash
-MPLCONFIGDIR=/tmp/mpl-cache python run_scf.py \
-  --config configs/default.yaml \
-  --bench configs/benchmark.yaml \
-  --system Fe_bcc \
-  --outdir /tmp/scf_slim_Fe_bcc
-```
-
-For a custom QE template:
-
-```bash
-python run_scf.py \
-  --config configs/default.yaml \
+scf-slim \
+  --config scripts/scf_slim/configs/default.yaml \
   --template /path/to/system_scf.in \
   --system MySystem \
-  --outdir /tmp/scf_slim_MySystem
+  --outdir /path/to/results/MySystem
 ```
 
-## Reading the output
-
-Do not judge a run from a single number. Read these files together:
-
-- `summary.csv`: beta, success flag, S4, steps, stop reason, oscillation hits,
-  negative-rho diagnostics, and paths.
-- `console.log`: probe order, bucket/search decisions, and final recommendation.
-- `<system>_recommendation.json`: recommendation and search report.
-- per-job `scf.out`: raw QE evidence for suspicious runs.
-
-## Tests
-
-Run the standard-library suite:
+A benchmark mapping can be used instead of `--template`:
 
 ```bash
-python -m unittest discover -s tests
+scf-slim \
+  --config scripts/scf_slim/configs/default.yaml \
+  --bench scripts/scf_slim/configs/benchmark.yaml \
+  --system Fe_bcc \
+  --outdir /path/to/results/Fe_bcc
 ```
 
-Or run the same tests through pytest:
+## Resume and overwrite
+
+A non-empty output directory requires an explicit choice:
 
 ```bash
-python -m pytest
+scf-slim ... --outdir /path/to/results --resume
+scf-slim ... --outdir /path/to/results --overwrite
 ```
 
-The tests avoid real QE execution. They cover configuration merging, template
-rendering, guard stop decisions, parser behavior, and CLI smoke commands.
+`--resume` loads completed probes from `summary.csv` and skips them. `run_manifest.json` fingerprints the system, effective configuration, and template, preventing incompatible results from being combined.
 
-## License
+## MPI and scheduler launchers
 
-MIT License. See `LICENSE`.
+Launcher arguments and `pw.x` arguments are separate:
+
+```yaml
+qe:
+  mpirun: srun
+  np: 32
+  launcher_args: ["--cpu-bind=cores"]
+  launcher_count_flag: null
+  use_launcher_np: true
+  pw: /opt/qe/bin/pw.x
+  pw_args: ["-nk", "4"]
+```
+
+For a site wrapper that already encodes ranks, set `use_launcher_np: false`. Cleanup never sends a process-group signal to the caller; the direct launcher is controlled through its original `Popen` handle and captured descendants are identity-checked before termination.
+
+## Seed reuse
+
+Set `task.seed_from_file: true` and `task.seed_dir` to an existing `<prefix>.save` directory. The tool copies a light seed, uses `startingpot='file'`, and forces `restart_mode='from_scratch'`. It does not misuse QE's `restart` mode for a new diagnostic calculation.
+
+## Outputs
+
+Read these together:
+
+- `preflight.json`: executable, template, and exact pseudo validation;
+- `run_manifest.json`: resume-safety fingerprints;
+- `summary.csv`: one evidence record per beta;
+- `console.log` and `events.jsonl`: search and stop decisions;
+- `<system>_recommendation.json`: explicit status and sampled safe segments;
+- `jobs/<prefix>/scf.in` and `scf.out`: rendered input and raw QE evidence;
+- `plots/`: optional residual plots.
+
+Important CSV columns include `ok`, `S4`, `stop`, `failure_reason`, `final_residual`, `tail_stable`, `tail_rebound_ratio`, `decay_rate`, `osc_hits`, and `neg_rho_max`.
+
+## Testing
+
+The automated suite uses a deterministic fake `pw.x` and exercises the real subprocess, monitor, parser, guards, search, verification, fail-fast, seed, and resume paths without requiring QE:
+
+```bash
+python -m compileall -q scripts tests
+python -m pytest -q
+python -m build
+```
+
+Synthetic scenarios cover stable convergence, threshold crossing followed by rebound, fatal QE output, failed full verification, exact pseudo checks, scheduler command construction, safe process cleanup, and resume without repeated probes.
+
+These tests validate workflow behavior, not physical accuracy. Real QE benchmark result datasets are intentionally outside the 0.2.0 release scope.
+
+## Scope
+
+The tool does not replace cutoff, k-point, pseudopotential, structural, occupations, smearing, magnetism, diagonalization, relaxation, or production-threshold validation. If every beta fails, investigate the physical input and runtime environment rather than requesting a finer beta grid.
+
+MIT licensed. See `LICENSE`, `CHANGELOG.md`, and `MIGRATION.md`.
