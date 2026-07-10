@@ -1,0 +1,2 @@
+include README.md CHANGELOG.md MIGRATION.md LICENSE SKILL.md
+recursive-include scripts/scf_slim/configs *.yaml *.in
