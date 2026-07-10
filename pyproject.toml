@@ -4,17 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qe-scf-slim"
-version = "0.1.0"
-description = "Guarded Quantum ESPRESSO SCF mixing_beta diagnostics"
+version = "0.2.0"
+description = "Evidence-backed Quantum ESPRESSO SCF mixing_beta diagnostics"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-authors = [
-  { name = "Hong Zhihan" }
-]
+authors = [{ name = "Hong Zhihan" }]
 keywords = ["quantum-espresso", "scf", "mixing-beta", "diagnostics"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
@@ -23,15 +21,10 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Physics",
 ]
-dependencies = [
-  "PyYAML>=6.0",
-  "matplotlib>=3.8",
-]
+dependencies = ["PyYAML>=6.0", "matplotlib>=3.8", "psutil>=5.9"]
 
 [project.optional-dependencies]
-dev = [
-  "pytest>=8.0",
-]
+dev = ["pytest>=8.0", "build>=1.2"]
 
 [project.scripts]
 scf-slim = "run_scf:main"
@@ -39,11 +32,16 @@ scf-slim = "run_scf:main"
 [tool.setuptools]
 package-dir = { "" = "scripts/scf_slim" }
 py-modules = ["run_scf", "parser"]
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["scripts/scf_slim"]
 include = ["scfopt*"]
 
+[tool.setuptools.package-data]
+"*" = ["configs/*.yaml", "configs/templates/*.in"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["scripts/scf_slim"]
+addopts = "-ra"
