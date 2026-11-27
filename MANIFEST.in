@@ -1,6 +1,6 @@
 include README.zh-CN.md SKILL.md
 recursive-include agents *.yaml
-recursive-include examples *.md *.in *.out
+recursive-include examples *.md *.in *.out *.json *.py *.png *.zip
 recursive-include scripts/scf_slim/configs *.yaml *.in
 include scripts/scf_slim/README.md scripts/scf_slim/requirements.txt
 recursive-include tests *.py

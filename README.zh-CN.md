@@ -1,38 +1,37 @@
 # QE SCF Slim 中文快速上手
 
-拿到一批 Quantum ESPRESSO `pw.x` 输出后，可以先筛出需要重看的作业，再按行号回到原始日志。离线诊断只需要 Python 3.10 或更新版本，登录节点上没有安装 QE 也能用。
+把一批 Quantum ESPRESSO `pw.x` 日志交给 `triage`，它会先列出需要干预的作业，再给出原因、原始行号和下一步动作。它只读已有输出，登录节点上有 Python 3.10 或更新版本即可，不会启动计算。
 
 ~~~sh
 git clone https://github.com/xxs4661/qe-scf-slim.git
 cd qe-scf-slim
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install .
-scf-slim compare examples/si-*.out
-scf-slim diagnose examples/si-maxstep.out
+python3 scripts/scf_slim/run_scf.py triage --all examples/
+python3 scripts/scf_slim/run_scf.py diagnose examples/al111/beta-070.out
 ~~~
 
-仓库里这两份硅计算的输出来自真实的 PWSCF 7.5。两份日志都有 `JOB DONE.`，电子收敛结果却不同。第一份在第 10 步收敛，最后报告的 SCF 精度估计小于 4.7×10⁻⁹ Ry。第二份把 `electron_maxstep` 限为 2，QE 明确报告未收敛。诊断会给出这条记录的行号。完整输入、赝势校验值和复现命令见[硅示例](examples/README.md)。
+在虚拟环境中运行 `python -m pip install .` 后，就可以在任意目录使用 `scf-slim`。
+
+| 判断 | 含义 | 典型动作 |
+| --- | --- | --- |
+| `intervene` 需要干预 | 日志记录了阻碍这次计算交付的具体问题 | 检查缺失的赝势、过低的迭代上限或反复回升的 SCF 精度估计 |
+| `review` 需要核实 | 还缺上下文，或报告的数值值得复核 | 对照调度器判断任务是否仍在运行，或查看末几步的能带警告 |
+| `none` 无需干预 | QE 报告电子自洽收敛且正常结束，规则未发现需要处理的问题 | 保留本次 SCF 结果，按物理量要求另行验证截断能和 k 点收敛 |
+
+## 两组实算说明了什么
+
+**硅晶体。** 一份日志在第 10 步收敛，另一份只允许 2 步就耗尽预算。两份都有 `JOB DONE.`。工具分别给出“保留结果”和“检查迭代上限”。这个例子中，直接用 QE 默认 β 跑了 8 步，而全套 β 搜索加验证一共跑了 99 步。[硅算例](examples/README.md) · [搜索成本记录](examples/si-search-cost.json)
+
+**六层 Al(111) 金属表面。** 在同样的 40 步预算、1e-8 Ry 阈值、`plain` 混合和 `mixing_ndim=2` 下，β=0.70 的运行末段反复回升，40 步结束时仍未收敛。工具据此建议核对结构和占据设置，再做一次只降低 β 的重试。其他条件保持一致，改为 β=0.20 后，第 22 步收敛。把混合历史恢复为默认的 8 个向量后，两者都收敛，β=0.70 用 18 步，β=0.20 用 27 步。单份日志能提示值得验证的假设，成对实验才检验了此次更改的效果。[完整输入、日志、曲线和复现实验](examples/al111/README.md)
 
 ## 用在自己的作业上
 
 ~~~sh
+scf-slim triage /scratch/my-jobs
+scf-slim triage --check --json /scratch/my-jobs > actions.json
 scf-slim diagnose Si/scf.out.gz
-scf-slim compare runs/*/scf.out
-scf-slim compare --check --json runs/*/scf.out > batch.json
+scf-slim compare ref/scf.out retry/scf.out
 ~~~
 
-- 看单个作业时，`diagnose` 显示最近一次运行的结论、迭代步数、精度估计和原文证据。加 `--json` 能取出最后一个电子循环的逐步历史。
-- 看一批作业时，`compare` 按输入顺序列出结果。加 `--check` 后，全部收敛返回 0，有作业未通过返回 1，文件读取或参数错误返回 2。
-- 工具针对常规电子自洽计算。它能识别并标记多种超出范围的任务，包括能带、结构弛豫和分子动力学。电子收敛之后，材料性质仍需检查截断能和 k 点采样。
+`triage` 递归读取目录中的 `*.out` 与 `*.out.gz`，也接受其他文件名的显式路径或标准输入 `-`。默认文本只展开需要关注的作业，`--all` 也列出健康作业。JSON 记录每份日志的 `status`、干预优先级、原因、下一步和证据行号。`triage --check` 在全部无需干预时返回 0，有待干预或核实的作业时返回 1，输入或读取错误返回 2。`diagnose --check` 和 `compare --check` 仍按电子收敛状态判断。
 
-## 需要实际试算 mixing_beta 时
-
-~~~sh
-python -m pip install '.[probe]'
-scf-slim probe --doctor
-scf-slim probe --template silicon.in --outdir runs/si --dry-run
-scf-slim probe --template silicon.in --outdir runs/si
-~~~
-
-实跑需要可用的 `pw.x` 和模板对应的赝势。建议先用 `--dry-run` 查看预算。默认以 1e-4 Ry 筛选候选值，再以 1e-8 Ry 做完整电子自洽验证。每次试算都保留输入和 stdout，验证状态写在推荐 JSON 中。命令、状态含义和配置入口见[英文说明](README.md)。
+如果确实需要搜索多个 β，可以显式调用 `probe`，先用 `--dry-run` 核对预算。常规作业先直接算，更换一个参数后按相同精度和资源比较两次结果。详细配置见[英文说明](README.md)。

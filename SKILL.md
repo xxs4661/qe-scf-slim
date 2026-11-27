@@ -1,42 +1,17 @@
 ---
 name: scf
-description: Diagnose Quantum ESPRESSO pw.x SCF output, compare multiple logs, or test mixing_beta on an existing input. Use for electronic convergence, interrupted jobs, QE runtime checks, and guarded beta probes.
+description: Identify which Quantum ESPRESSO pw.x SCF jobs need intervention from existing logs, cite the evidence, and recommend a targeted next action.
 ---
 
-# Diagnose a Quantum ESPRESSO SCF calculation
+# Triage SCF calculations
 
-The checkout entry point is `python3 <skill-dir>/scripts/scf_slim/run_scf.py`.
-An installed copy exposes the same commands through `scf-slim`. Write probe
-artifacts into the user's workspace.
+Use `scf-slim triage PATH...` for a batch or directory. For a source checkout, run `python3 <skill-dir>/scripts/scf_slim/run_scf.py triage PATH...`. The command reads the logs offline.
 
-## Start with the available evidence
+1. Report the counts of jobs marked `intervene`, `review` and `none`, and any read errors. Start with the calculations that need intervention.
+2. Run `scf-slim diagnose FILE --json` on a flagged job. Report the reason and next action from `intervention`. Cite the original records at `evidence_lines`. Preserve the operator and Ry units for the printed accuracy estimate.
+3. Use the scheduler and latest output to clarify a partial job. Check the input and reported failure first when the log cites a missing file, a resource limit or a short iteration budget.
+4. If a terminated run shows repeated rebounds with little net progress, check the structure and occupations. A single lower-beta retry with other inputs fixed tests the mixing hypothesis. Compare the two outputs with `scf-slim compare`. A converged run with no flagged issues needs no SCF intervention.
 
-1. Given an existing output, run `scf-slim diagnose FILE --json`. Given several
-   outputs, use `scf-slim compare FILE... --json` and inspect the individual logs
-   that need attention. Both commands accept gzip files.
-2. State the reported outcome for the latest invocation. Cite source lines for
-   the convergence verdict and last accuracy estimate, retaining its operator
-   and Ry units. A completion footer alone leaves the electronic outcome open.
-3. Describe a next action supported by the evidence. For example, when the log
-   says QE exhausted two iterations, check the iteration budget and threshold.
-   For runtime errors, inspect the reported routine and scheduler stderr.
-4. Use full calculation and template context before comparing beta values.
-   Ordinary SCF, ionic convergence and hybrid outer-loop convergence have
-   different criteria. Identify any calculation outside the parser's scope.
+A broad live beta scan consumes allocation. Use it only when requested or when the user has chosen it after seeing the evidence. Install the probe extra, check `scf-slim probe --doctor`, and inspect the budget with `scf-slim probe --template input.in --outdir /path/to/workspace/scan --dry-run`. Write outputs in the workspace. A successful finalist verifies convergence for those inputs; a speedup claim also needs the direct baseline, all trial costs and comparable production outputs.
 
-## Run a bounded probe
-
-When the user wants live calculation, install the probe extra, check the
-environment with `scf-slim probe --doctor`, and inspect the plan first.
-
-~~~sh
-scf-slim probe --template input.in --outdir /path/to/workspace/scan --dry-run
-scf-slim probe --template input.in --outdir /path/to/workspace/scan
-~~~
-
-A search can also use `--config` with a YAML file and `--bench` with a named
-`--system`. Inspect the generated inputs, `summary.csv`, individual `scf.out`
-files and `<system>_recommendation.json`. Report the tested beta values, cheap
-screening target, verification threshold and outcome. Give a recommendation
-only as far as the evidence supports it. Cutoff and k-point convergence need
-separate tests for the target property.
+For reproducible examples, use the silicon and Al(111) jobs in `examples/`. The electronic verdict concerns the final cycle of the latest invocation. Physical cutoff, k-point, ionic and hybrid outer-loop convergence have separate criteria.

@@ -39,3 +39,5 @@ jobs:
           offline/bin/scf-slim diagnose "$GITHUB_WORKSPACE/examples/si-converged.out" --check
           offline/bin/scf-slim compare "$GITHUB_WORKSPACE"/examples/*.out --json > batch.json
           python -c 'import json; assert json.load(open("batch.json"))["counts"] == {"converged": 1, "unconverged": 1}'
+          offline/bin/scf-slim triage --json "$GITHUB_WORKSPACE/examples" > actions.json
+          python -c 'import json; assert json.load(open("actions.json"))["counts"] == {"intervene": 2, "review": 0, "none": 2, "read_error": 0}'

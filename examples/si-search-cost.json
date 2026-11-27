@@ -1,0 +1,333 @@
+{
+  "experiment": "One small diamond-Si case: direct pw.x versus screen and verify; all runs sequential",
+  "date": "2026-11-27",
+  "code_git_sha": "9b6d7713e24c66dd6ff8c0ad3aef42de5f91b6d6",
+  "release": "v0.3.0",
+  "quantum_espresso": "PWSCF 7.5",
+  "platform": "Apple M5, arm64, macOS 26.6.2",
+  "execution": {
+    "mpi_ranks": 1,
+    "openmp_threads": 1,
+    "openblas_threads": 1,
+    "launcher": "Same Julia QE-JLL launcher for every pw.x invocation. Wall times include launcher startup, I/O, monitoring and default plotting where enabled. No scheduler waits. A fresh scratch directory was used per SCF and no charge-density seed was inherited."
+  },
+  "problem": {
+    "input_source": "examples/si-converged.in; identical physical input throughout",
+    "nat": 2,
+    "lattice_parameter_angstrom": 5.431,
+    "ecutwfc_ry": 45,
+    "ecutrho_ry": 360,
+    "kpoints": "4x4x4, unshifted",
+    "occupations": "fixed",
+    "pseudo_file": "Si.pbe-n-rrkjus_psl.1.0.0.UPF",
+    "pseudo_sha256": "669fb75395a9d26973b0ea1ce8223bbcb30d3396c5d48bf5e794d1243c52375a",
+    "electron_maxstep": 160,
+    "final_conv_thr_ry": 1e-08,
+    "probe_scoring_target_ry": 0.0001,
+    "disk_io": "low"
+  },
+  "search_settings": {
+    "project_default_search": "All v0.3.0 defaults except pw.x executable path. Search range 0.01–1.00; 7 initial anchors, max_evals=12, 3 confirmation steps; plotting enabled.",
+    "two_probe_search": "Only 0.30 and 0.50, no confirmation tail, plots off. Fresh strict verification enabled."
+  },
+  "runs": [
+    {
+      "strategy": "direct_template_beta",
+      "repetitions": 3,
+      "end_to_end_wall_s": [
+        2.7785,
+        2.2991,
+        2.3547
+      ],
+      "median_wall_s": 2.3547,
+      "pw_launches_per_repetition": 1,
+      "final_beta": 0.5,
+      "final_electronic_iterations": 10,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true
+    },
+    {
+      "strategy": "direct_QE_default",
+      "repetitions": 3,
+      "end_to_end_wall_s": [
+        2.2274,
+        2.1148,
+        2.1334
+      ],
+      "median_wall_s": 2.1334,
+      "pw_launches_per_repetition": 1,
+      "final_beta": 0.7,
+      "final_electronic_iterations": 8,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true
+    },
+    {
+      "strategy": "two_probe_search",
+      "repetitions": 1,
+      "end_to_end_wall_s": [
+        7.6418
+      ],
+      "median_wall_s": 7.6418,
+      "pw_launches_per_repetition": 3,
+      "final_beta": 0.5,
+      "final_electronic_iterations": 10,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true,
+      "pass_number": 1,
+      "initial_font_cache": "unused",
+      "guarded_probe_steps_total": 14,
+      "steps_including_verification": 24,
+      "guarded_probes_monitored_wall_sum_s": 5.0495,
+      "verification_cold_start": true,
+      "probe_results": [
+        {
+          "beta": 0.3,
+          "observed_steps": 7,
+          "first_target_step": 6,
+          "stop": "near_target_done"
+        },
+        {
+          "beta": 0.5,
+          "observed_steps": 7,
+          "first_target_step": 5,
+          "stop": "near_target_done"
+        }
+      ]
+    },
+    {
+      "strategy": "project_default_search",
+      "repetitions": 1,
+      "end_to_end_wall_s": [
+        42.4558
+      ],
+      "median_wall_s": 42.4558,
+      "pw_launches_per_repetition": 13,
+      "final_beta": 0.96,
+      "final_electronic_iterations": 6,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true,
+      "pass_number": 1,
+      "initial_font_cache": "empty",
+      "guarded_probe_steps_total": 93,
+      "steps_including_verification": 99,
+      "guarded_probes_monitored_wall_sum_s": 27.7528,
+      "verification_cold_start": true,
+      "probe_results": [
+        {
+          "beta": 0.01,
+          "observed_steps": 12,
+          "first_target_step": 7,
+          "stop": "near_target_done"
+        },
+        {
+          "beta": 0.18,
+          "observed_steps": 13,
+          "first_target_step": 10,
+          "stop": "success"
+        },
+        {
+          "beta": 0.34,
+          "observed_steps": 8,
+          "first_target_step": 5,
+          "stop": "success"
+        },
+        {
+          "beta": 0.5,
+          "observed_steps": 10,
+          "first_target_step": 5,
+          "stop": "success"
+        },
+        {
+          "beta": 0.67,
+          "observed_steps": 7,
+          "first_target_step": 4,
+          "stop": "near_target_done"
+        },
+        {
+          "beta": 0.76,
+          "observed_steps": 7,
+          "first_target_step": 4,
+          "stop": "success"
+        },
+        {
+          "beta": 0.84,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.88,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.92,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.96,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.98,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 1.0,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        }
+      ]
+    },
+    {
+      "strategy": "direct_at_default_search_winner",
+      "repetitions": 3,
+      "end_to_end_wall_s": [
+        1.9599,
+        1.9219,
+        1.9502
+      ],
+      "median_wall_s": 1.9502,
+      "pw_launches_per_repetition": 1,
+      "final_beta": 0.96,
+      "final_electronic_iterations": 6,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true
+    },
+    {
+      "strategy": "two_probe_search",
+      "repetitions": 1,
+      "end_to_end_wall_s": [
+        7.6767
+      ],
+      "median_wall_s": 7.6767,
+      "pw_launches_per_repetition": 3,
+      "final_beta": 0.5,
+      "final_electronic_iterations": 10,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true,
+      "pass_number": 2,
+      "initial_font_cache": "unused",
+      "guarded_probe_steps_total": 14,
+      "steps_including_verification": 24,
+      "guarded_probes_monitored_wall_sum_s": 5.0515,
+      "verification_cold_start": true,
+      "probe_results": [
+        {
+          "beta": 0.3,
+          "observed_steps": 7,
+          "first_target_step": 6,
+          "stop": "near_target_done"
+        },
+        {
+          "beta": 0.5,
+          "observed_steps": 7,
+          "first_target_step": 5,
+          "stop": "near_target_done"
+        }
+      ]
+    },
+    {
+      "strategy": "project_default_search",
+      "repetitions": 1,
+      "end_to_end_wall_s": [
+        31.4837
+      ],
+      "median_wall_s": 31.4837,
+      "pw_launches_per_repetition": 13,
+      "final_beta": 0.96,
+      "final_electronic_iterations": 6,
+      "final_printed_energy_ry": -22.82597051,
+      "convergence_reported": true,
+      "pass_number": 2,
+      "initial_font_cache": "warm",
+      "guarded_probe_steps_total": 93,
+      "steps_including_verification": 99,
+      "guarded_probes_monitored_wall_sum_s": 28.2482,
+      "verification_cold_start": true,
+      "probe_results": [
+        {
+          "beta": 0.01,
+          "observed_steps": 12,
+          "first_target_step": 7,
+          "stop": "near_target_done"
+        },
+        {
+          "beta": 0.18,
+          "observed_steps": 13,
+          "first_target_step": 10,
+          "stop": "success"
+        },
+        {
+          "beta": 0.34,
+          "observed_steps": 8,
+          "first_target_step": 5,
+          "stop": "success"
+        },
+        {
+          "beta": 0.5,
+          "observed_steps": 10,
+          "first_target_step": 5,
+          "stop": "success"
+        },
+        {
+          "beta": 0.67,
+          "observed_steps": 7,
+          "first_target_step": 4,
+          "stop": "near_target_done"
+        },
+        {
+          "beta": 0.76,
+          "observed_steps": 7,
+          "first_target_step": 4,
+          "stop": "success"
+        },
+        {
+          "beta": 0.84,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.88,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.92,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.96,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 0.98,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        },
+        {
+          "beta": 1.0,
+          "observed_steps": 6,
+          "first_target_step": 3,
+          "stop": "success"
+        }
+      ]
+    }
+  ],
+  "interpretation_limits": "One easy insulating system on a single workstation. Direct controls repeated three times. Each search strategy ran twice, with individual passages retained. The small workload and JLL startup increase wall-time sensitivity; iteration and launch counts are provided separately. No claim about difficult SCF systems or different structures."
+}

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "qe-scf-slim"
 dynamic = ["version"]
-description = "Diagnose Quantum ESPRESSO SCF logs, compare runs, and probe mixing beta"
+description = "Triage Quantum ESPRESSO SCF jobs with line-numbered evidence and targeted next actions"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"

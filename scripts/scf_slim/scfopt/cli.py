@@ -11,6 +11,7 @@ from . import __version__
 from .compare import add_compare_parser
 from .diagnostics import diagnose
 from .log_input import open_log
+from .triage import add_triage_parser
 
 
 def run_diagnose(args: argparse.Namespace) -> int:
@@ -27,7 +28,15 @@ def run_diagnose(args: argparse.Namespace) -> int:
     if args.json:
         print(json.dumps({"schema_version": 1, "path": args.log, **report}, indent=2, allow_nan=False))
     else:
+        decision = report["intervention"]
         print(f"{args.log}  [{report['status']}]")
+        print(f"Intervention: {decision['priority']}")
+        print(f"Reason: {decision['reason']}")
+        print(f"Next action: {decision['next_action']}")
+        if decision["evidence_lines"]:
+            lines = ", ".join(map(str, decision["evidence_lines"]))
+            print(f"Supporting lines: {lines}")
+        print()
         print(f"PWSCF runs: {report['runs']}    SCF cycles in last run: {report['cycles']}")
         if report['iterations'] is not None:
             print(f"Last SCF iteration: {report['iterations']}")
@@ -45,10 +54,6 @@ def run_diagnose(args: argparse.Namespace) -> int:
             print('\nEvidence (source line)')
             for item in report['evidence']:
                 print(f"  {item['line']:>6}  {item['text']}")
-        if report['advice']:
-            print('\nInterpretation')
-            for advice in report['advice']:
-                print(f'  {advice}')
     return int(args.check and report['status'] != 'converged')
 
 
@@ -62,9 +67,14 @@ def main(argv: list[str] | None = None) -> int:
 
         return probe_main(argv[1:] if first == "probe" else argv)
 
-    parser = argparse.ArgumentParser(prog='scf-slim', description='Diagnose Quantum ESPRESSO pw.x output and run guarded SCF probes.')
+    parser = argparse.ArgumentParser(
+        prog="scf-slim",
+        description="Find which Quantum ESPRESSO SCF jobs need intervention and see the evidence in their logs.",
+        epilog="Start with: scf-slim triage RUN_DIRECTORY",
+    )
     parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
     commands = parser.add_subparsers(dest='command', required=True, metavar='COMMAND')
+    add_triage_parser(commands)
     cmd = commands.add_parser('diagnose', help='explain one pw.x log with line-numbered evidence')
     cmd.add_argument('log', metavar='LOG', help='pw.x output, a .gz log, or - for stdin')
     cmd.add_argument('--json', action='store_true', help='emit a JSON report including the iteration history')

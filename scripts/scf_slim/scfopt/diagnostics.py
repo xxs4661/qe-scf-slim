@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Any
 
+from .intervention import assess_intervention
 
 _PROGRAM = re.compile(r"^Program\s+(\S+)\s+v\.", re.I)
 _CYCLE = re.compile(r"^Self-consistent Calculation\s*$", re.I)
@@ -64,6 +65,7 @@ class _Cycle:
     beta: float | None = None
     betas: list[float] = field(default_factory=list)
     history: list[dict] = field(default_factory=list)
+    accuracy_lines: dict[int, str] = field(default_factory=dict)
     outcome: str | None = None
     evidence: dict = field(default_factory=dict)
     nonfinite: set[str] = field(default_factory=set)
@@ -111,8 +113,7 @@ def _accuracy_trend(history: list[dict]) -> str | None:
         return f"The last {len(values)} readable SCF estimates are equal at the printed precision ({values[-1]:.6g} Ry)."
     rebounds = sum(a > b < c for a, b, c in zip(values, values[1:], values[2:]))
     if rebounds >= 2:
-        return (f"The last {len(values)} readable estimates contain {rebounds} decreases followed by increases. "
-                "Check the occupations and band filling. Test a smaller mixing_beta with other inputs fixed.")
+        return f"The last {len(values)} readable estimates contain {rebounds} decreases followed by increases."
     if values[-1] > values[-2]:
         return f"The last readable SCF estimate rose from {values[-2]:.6g} to {values[-1]:.6g} Ry."
     return None
@@ -266,6 +267,7 @@ def diagnose(lines: Iterable[str]) -> dict[str, Any]:
             cycle.operator = accuracy[1]
             cycle.evidence["accuracy"] = record("accuracy")
             if cycle.residual is not None:
+                cycle.accuracy_lines[line_no] = line
                 cycle.history.append({"iteration": cycle.iteration, "residual_ry": cycle.residual,
                                       "operator": cycle.operator, "line": line_no})
         elif energy:
@@ -290,7 +292,7 @@ def diagnose(lines: Iterable[str]) -> dict[str, Any]:
         advice.append("Multiple printed mixing_beta values occur in the last cycle. Inspect their sequence before comparing runs.")
     advice.extend(_warning_advice(run))
     evidence = sorted([*run.evidence.values(), *cycle.evidence.values()], key=lambda event: event["line"])
-    return {
+    report = {
         "status": status, "runs": previous_runs + int(run.recognized), "cycles": run.cycles,
         "job_done": "job_done" in run.evidence, "iterations": cycle.iteration,
         "mixing_beta": cycle.beta, "mixing_betas": cycle.betas,
@@ -298,3 +300,11 @@ def diagnose(lines: Iterable[str]) -> dict[str, Any]:
         "threshold_ry": run.threshold, "energy_ry": cycle.energy, "wall_seconds": run.wall,
         "history": cycle.history, "warnings": run.warnings, "evidence": evidence, "advice": advice,
     }
+    report["intervention"] = assess_intervention(report)
+    # Keep the exact stdout lines that justify a trend, even for gzip and stdin.
+    existing = {event["line"] for event in evidence}
+    for n in report["intervention"]["evidence_lines"]:
+        if n not in existing and n in cycle.accuracy_lines:
+            evidence.append({"kind": "accuracy", "line": n, "text": cycle.accuracy_lines[n]})
+    evidence.sort(key=lambda event: event["line"])
+    return report

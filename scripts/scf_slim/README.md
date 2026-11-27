@@ -1,6 +1,6 @@
 # SCF Slim
 
-This directory contains the standalone Python CLI used by the `$scf` skill.
+The read-only `triage` and `diagnose` commands are described in the [main guide](../../README.md). This guide covers the optional live search.
 The tool renders QE templates, runs guarded `pw.x` probes, and writes enough
 logs to explain how each tested beta performed.
 
@@ -8,7 +8,7 @@ The search is intentionally simple: coarse anchors first, then sequential or buc
 to divergence, oscillation, a plateau, timeout, or excessive negative rho.
 
 Probe runs are evaluated against `task.target_residual_ry`, a deliberately loose
-target used to compare beta values cheaply. After choosing a beta, run your own
+target used to compare beta values. A search can cost more than a direct calculation. After choosing a beta, run your own
 full SCF at the convergence threshold required by the actual calculation.
 
 ## Layout

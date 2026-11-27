@@ -54,3 +54,5 @@ MPI launchers may return a failure code for this case. Check the electronic
 convergence messages in each log. Timings, last digits, and iteration counts can
 vary across builds. QE documents how the energy-error estimate relates to
 `conv_thr` in the [PWscf input reference](https://www.quantum-espresso.org/Doc/INPUT_PW.html).
+
+For a case with a mixing-dependent outcome, see the [six-layer aluminum slab](al111/README.md).

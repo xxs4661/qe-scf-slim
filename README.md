@@ -1,109 +1,73 @@
 # QE SCF Slim
 
-Read Quantum ESPRESSO `pw.x` output and decide which self-consistent-field (SCF)
-calculations need attention. `scf-slim diagnose` gives a verdict with source
-line numbers. `scf-slim compare` turns a batch of logs into a table or JSON for
-a job pipeline. If a calculation genuinely needs a different mixing factor,
-`scf-slim probe` can test candidates against the same input.
+A read-only triage tool for Quantum ESPRESSO `pw.x` electronic self-consistent-field (SCF) calculations. Point it at a directory of job logs. It puts jobs that need intervention first, explains the reason, cites the relevant stdout lines and suggests one next action. Triage uses Python 3.10+ and its standard library. It runs on a login node without launching QE.
 
 [中文快速上手](README.zh-CN.md)
 
-## Try it on two real calculations
-
-The repository includes stdout from two silicon runs with identical inputs
-except for the electronic iteration limit. Both printed `JOB DONE.`
+## Start with the logs
 
 ~~~sh
 git clone https://github.com/xxs4661/qe-scf-slim.git
 cd qe-scf-slim
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install .
-scf-slim compare examples/si-*.out
-scf-slim diagnose examples/si-maxstep.out
+python3 scripts/scf_slim/run_scf.py triage --all examples/
+python3 scripts/scf_slim/run_scf.py diagnose examples/al111/beta-070.out
 ~~~
 
-| File | Verdict | Last SCF iteration | Last printed SCF accuracy |
-| --- | --- | ---: | ---: |
-| `si-converged.out` | converged | 10 | < 4.7e-9 Ry |
-| `si-maxstep.out` | unconverged | 2 | < 0.01224138 Ry |
+For a command available anywhere, install the checkout in a virtual environment with `python -m pip install .`. Then run `scf-slim triage path/to/jobs/`.
 
-The second input allowed just two iterations. Inspecting the cited convergence
-message and the iteration budget is a better first step here than starting a
-mixing-factor sweep. The inputs, outputs, pseudopotential checksum, and commands
-to reproduce both runs are in the [example directory](examples/README.md).
+| Decision | What it means | Example action |
+| --- | --- | --- |
+| `intervene` | The output records a problem that needs a change before the result can be used. | Check a missing UPF, address a scheduler limit, extend a clearly short iteration budget, or test one change to mixing when the history supports it. |
+| `review` | The log needs more context or a numerical check. | Check the scheduler for a truncated job or inspect a band warning that persisted to the final electronic iterations. |
+| `none` | QE reports electronic convergence and completion, with no issue flagged by these rules. | Keep the SCF result. Validate the k-point sampling and cutoffs for the property you plan to calculate. |
 
-## Use it on a cluster
+The decision and the QE outcome are separate fields. A live job can have `status=incomplete` and `priority=review`. A converged job can also merit review. A directory read error is reported separately, and readable files still get their own results.
 
-The offline commands require Python 3.10+ and use its standard library.
-They work on a login node without QE, MPI, pseudopotentials, or network access.
-An uninstalled checkout works too, using `python3 scripts/scf_slim/run_scf.py`
-in place of `scf-slim`.
+## Cases you can inspect
+
+| Saved job | What QE recorded | What the tool suggests |
+| --- | --- | --- |
+| Silicon, standard iteration budget | Converged in 10 iterations | Keep the result. |
+| Same silicon, budget of 2 iterations | Printed `JOB DONE.` after reporting electronic nonconvergence | Inspect `electron_maxstep` and the requested threshold. |
+| Six-layer Al(111), β=0.70 | Large rebounds near the end of a 40-step budget, no convergence | Check the structure and occupations, then compare one controlled retry at lower β. |
+| Same Al(111), β=0.20 | Converged in 22 iterations with the same initial conditions | Keep the result. |
+
+**Changing the mixing history reverses the ordering.** In the same slab with the default eight-vector history, both runs converge, β=0.70 in 18 steps and β=0.20 in 27. The two-vector result supports a targeted retry for that input.
+
+The aluminum comparison holds the structure, pseudopotential, k mesh, smearing, mixing mode and history length (`mixing_ndim=2`) fixed. The decision for each log uses only its own contents. A residual pattern can motivate testing a change. The paired calculation supplies the evidence about sensitivity to that change. Open the [Al(111) inputs, logs, residual plot and repeat measurements](examples/al111/README.md) or the [silicon controls](examples/README.md).
+
+## Cluster and pipeline use
 
 ~~~sh
-scf-slim diagnose scratch/Fe/scf.out.gz
-scf-slim compare runs/*/scf.out
-scf-slim diagnose - --json < scratch/Fe/scf.out > fe-diagnosis.json
-scf-slim compare --check --json runs/*/scf.out > batch.json
+scf-slim triage /scratch/my-jobs
+scf-slim triage --check --json /scratch/my-jobs > actions.json
+scf-slim diagnose - --json < run/scf.out > details.json
+scf-slim compare ref/scf.out retry/scf.out.gz
 ~~~
 
-By default, a readable log produces a report and exit code **0**, including for
-failed calculations. With `--check`, **1** means at least one calculation needs
-attention. **2** means the command line or an input file could not be read.
-Batch JSON keeps the result for each file in argument order with aggregate
-counts. Individual JSON includes the last electronic cycle's accuracy history,
-units in field names, numbered evidence, and interpretation.
+- `triage` searches directories recursively for `*.out` and `*.out.gz`. Supply explicit paths for other filenames or `-` for stdin. JSON rows carry the QE `status` and `intervention` with `priority`, `code`, `reason`, `next_action` and `evidence_lines`. Counts include all three priorities and `read_error`. The default text focuses on jobs needing attention. Add `--all` to list healthy jobs too.
+- `diagnose` shows one decision, the cited source records, the estimated accuracy in Ry and the printed threshold. Its JSON also contains the final electronic cycle's iteration history.
+- `compare` keeps the supplied order and shows numerical outcomes side by side. Compare iterations and times at the same physical settings, threshold and resources.
+- A successful read returns **0** by default. With `triage --check`, **1** means at least one job needs intervention **or** review. With `diagnose --check` and `compare --check`, **1** tests the reported electronic outcome and means at least one job did not reach `converged`. Input or read errors return **2**.
 
-| Verdict | Evidence |
-| --- | --- |
-| `converged` | The latest electronic cycle reports convergence and the invocation prints its completion footer. |
-| `unconverged` | QE explicitly reports that electronic convergence was not achieved. |
-| `incomplete` | A recognized calculation is still open, stopped early, or lacks definitive final output. |
-| `failed` | A recognized run reports a fatal error or a nonfinite final electronic energy or accuracy estimate. |
-| `unsupported` | The log is unrecognized or identifies a calculation outside the supported SCF scope. |
+### How to interpret a mixing recommendation
 
-For appended outputs the newest invocation wins. The comparison uses each
-run's final electronic cycle and the wall time printed for that invocation.
-Compare iteration counts across runs with the same structure, thresholds and
-physics. QE's estimated SCF accuracy is an estimate of the energy error in Ry.
-Electronic convergence alone does not establish convergence of the k-point mesh
-or basis cutoff. The tool targets ordinary electronic SCF runs. Identifiable
-bands, NSCF, relaxation, MD and hybrid outer-loop outputs get an unsupported
-verdict. Very short fragments can omit the markers needed to identify a mode.
-See the [QE input reference](https://www.quantum-espresso.org/Doc/INPUT_PW.html)
-and [QE troubleshooting guide](https://www.quantum-espresso.org/Doc/pw_user_guide/node21.html).
+The tool considers the final cycle of the latest invocation in an appended log. It gives fatal errors and explicit stops their own actions. The mixing rule examines the last 6–8 consecutive printed estimates at a stable observed beta. It requires at least two falls of a factor of two followed by rebounds of a factor of two. It suppresses this signal if the end value or the best value in the second half improves by more than a factor of two relative to the start or first-half best, respectively. These are screening heuristics. In a snapshot with at least 12 iterations and no final outcome, the same pattern prompts a check of the newest stdout and scheduler state. A single spike, tiny fluctuations, or a rapidly decreasing series does not trigger a mixing retry. The cited records let you inspect that judgment yourself. The rules target ordinary electronic SCF. Recognizable relaxation, MD, hybrid and band-structure runs need their own completion criteria. See the [QE troubleshooting guide](https://www.quantum-espresso.org/Doc/pw_user_guide/node21.html) and [pw.x input reference](https://www.quantum-espresso.org/Doc/INPUT_PW.html).
 
-## Probe mixing beta on your own input
+## Optional live beta probes
 
-Install the live extras and point the tool at a usable SCF template. A dry run
-prints the effective configuration, candidates and budget before launching QE.
+For most jobs, start with the run you already intended to do and triage its output. A parameter search has a real cost. On the small silicon control, direct QE with β=0.70 took 8 electronic iterations. The v0.3.0 default search used 12 trials and a verification run, totaling 99 iterations to obtain the same printed energy. [Recorded cost comparison](examples/si-search-cost.json)
+
+A controlled retry changes one input with the same starting conditions and target. For a broader search, the existing live runner is available explicitly. Install the extra with `python -m pip install '.[probe]'`. Inspect the plan before spending compute time.
 
 ~~~sh
-python -m pip install '.[probe]'
 scf-slim probe --doctor
 scf-slim probe --template silicon.in --outdir runs/si --dry-run
-scf-slim probe --template silicon.in --outdir runs/si
 ~~~
 
-The default setup runs `pw.x` on one rank. Relative `pseudo_dir` values are
-resolved from the template's directory. An explicit `ESPRESSO_PSEUDO` in the
-config or environment takes precedence. Probes preserve the template's smearing
-width and mixing mode by default. Use `--config` to change the launcher, probe
-budget, guard thresholds or verification settings. Start with
-[default.yaml](scripts/scf_slim/configs/default.yaml) or see the
-[benchmark and configuration guide](scripts/scf_slim/README.md).
-The original flag-based `scf-slim --config ...` invocation is also supported.
+The default budget permits up to 12 trials and one verification. The screening target is 1e-4 Ry and the default verification threshold is 1e-8 Ry. Use `--config` to change the budget, launcher and thresholds. Relative template `pseudo_dir` values resolve from the template directory. The config or environment variable `ESPRESSO_PSEUDO` takes precedence. The live search preserves the template's smearing width and mixing mode unless explicitly overridden.
 
-Each probe writes its rendered input and stdout under `jobs/`. Reusing an
-output directory keeps earlier evidence and puts the new run in a unique
-`run-*` subdirectory. The JSON field `outdir` gives the actual location. Read
-`summary.csv` alongside `<system>_recommendation.json`. The default search
-uses a cheap target of 1e-4 Ry to screen candidates, then checks the selected
-beta in a fresh SCF at 1e-8 Ry. The recommendation records whether verification
-succeeded (`verified`), was disabled (`probe_only`), or failed
-(`verification_failed`). A search without a qualifying probe records
-`no_candidate`. The latter two outcomes leave `recommended_beta` empty and
-return exit code 1. Review the full SCF log before using a beta in production.
+Inspect each rendered input and stdout under `jobs/`, plus `summary.csv` and `<system>_recommendation.json`. The latter records `verified`, `probe_only`, `verification_failed` or `no_candidate`. The last two leave the recommended beta empty. Reusing an output location creates a separate run directory. The original flag-based probe command also works. See the [live runner guide](scripts/scf_slim/README.md) and [default configuration](scripts/scf_slim/configs/default.yaml).
 
 ## Development
 
@@ -112,6 +76,4 @@ python -m pip install -e '.[dev,probe]'
 python -m pytest
 ~~~
 
-The test suite runs offline against saved QE outputs. To repeat the calculations
-themselves, use the [silicon example](examples/README.md). Licensed under
-the [MIT License](LICENSE).
+The test suite reads saved outputs offline. The examples include instructions for rerunning the calculations. [MIT License](LICENSE)

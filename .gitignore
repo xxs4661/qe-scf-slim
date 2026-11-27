@@ -35,3 +35,6 @@ tmp/
 pseudos/
 *.UPF
 *.upf
+
+# Published figure generated from the Al(111) example stdout.
+!examples/al111/scf-accuracy.png

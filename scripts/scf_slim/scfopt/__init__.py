@@ -1,3 +1,3 @@
-"""Quantum ESPRESSO SCF log diagnostics and guarded mixing-beta probes."""
+"""Evidence-based intervention decisions for Quantum ESPRESSO SCF jobs."""
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
