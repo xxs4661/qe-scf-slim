@@ -1,0 +1,4 @@
+include README.zh-CN.md SKILL.md
+recursive-include agents *.yaml
+recursive-include examples *.md *.in *.out
+recursive-include scripts/scf_slim/configs *.yaml *.in

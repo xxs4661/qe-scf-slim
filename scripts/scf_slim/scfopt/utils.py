@@ -54,7 +54,7 @@ def running_min_logs(residuals: List[float]) -> List[float]:
 
 def compute_s4(residuals: List[float], threshold: float) -> Optional[int]:
     for idx, value in enumerate(residuals, start=1):
-        if value > 0 and value <= threshold:
+        if 0 <= value <= threshold:
             return idx
     return None
 

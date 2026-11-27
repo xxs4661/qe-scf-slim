@@ -7,7 +7,7 @@ qe:
   extra_args: []
   env:
     OMP_NUM_THREADS: "1"
-    ESPRESSO_PSEUDO: "/path/to/pseudos"
+    # ESPRESSO_PSEUDO: "/absolute/path/to/pseudos"
 
 task:
   beta_range: [0.20, 0.60]

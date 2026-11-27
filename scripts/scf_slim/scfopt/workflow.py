@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 import time
 from argparse import Namespace
 from pathlib import Path
@@ -11,6 +13,7 @@ from .config import effective_config, load_template, load_yaml
 from .logging_utils import EventLogger
 from .output import write_summary
 from .plots import plot_residuals
+from .qe_input import template_pseudo_dir
 from .qe_runner import QERunner, cleanup_job_root_heavy, cleanup_save_heavy, clone_save_light
 from .search import best_record, nearest_bracket_width, propose_next_beta
 from .utils import beta_index, compute_s4, ensure_dir, fit_tail_linear, fmt_beta, initial_anchors, raw_logs, round_beta
@@ -88,16 +91,24 @@ def evaluate_beta(
 def probe_record(beta: float, tag: str, res: Dict[str, Any], cfg: Dict[str, Any], out_dir: Path, prefix: str) -> Dict[str, Any]:
     task = cfg.get("task", {})
     seed_dir = keep_light_seed(res, cfg, out_dir, prefix)
-    s4 = compute_s4(res["residuals"], float(task.get("target_residual_ry", 1e-4)))
+    target = float(task.get("target_residual_ry", 1e-4))
+    s4 = compute_s4(res["residuals"], target)
     b_abs, r2, fit_n = fit_tail_linear(raw_logs(res["residuals"]), int(task.get("fit_window_L", 12)))
     diagnostics = res.get("diagnostics", {})
-    ok = s4 is not None
+    # S4 remains the first threshold crossing, even when a later failure
+    # disqualifies this probe from the search.
+    stop = res["stop_reason"]
+    ok = s4 is not None and (
+        stop == "near_target_done" or (stop == "success" and res["residuals"][-1] <= target)
+    )
     return {
         "beta": beta,
         "ok": ok,
         "S4": int(s4) if s4 is not None else None,
         "steps": int(res["steps"]),
-        "stop": res["stop_reason"],
+        "stop": stop,
+        "returncode": res["returncode"],
+        "output_status": res["output_status"],
         "time_s": float(res["time_s"]),
         "energy": res.get("energy"),
         "b_abs": b_abs if ok else None,
@@ -158,7 +169,7 @@ def run_full_scf(
         disk_io="low",
         startingpot=("file" if used_seed else None),
         startingwfc=("atomic" if used_seed else None),
-        restart_mode=("restart" if used_seed else None),
+        restart_mode=("from_scratch" if used_seed else None),
         guard_cfg_dict={},
         episode_timeout_s=float(verify.get("timeout_s", task.get("episode_timeout_s", 7200))),
         disable_guard=True,
@@ -171,11 +182,16 @@ def run_full_scf(
 
 
 def maybe_clone_seed(champion: Dict[str, Any], verify: Dict[str, Any], job_dir: Path, prefix: str) -> bool:
-    seed_dir = Path(champion.get("seed_dir") or "")
-    if verify.get("inherit_seed", False) and seed_dir.exists():
-        clone_save_light(seed_dir, job_dir / f"{prefix}.save")
-        return True
-    return False
+    source = champion.get("seed_dir")
+    if not verify.get("inherit_seed", False) or not source:
+        return False
+    seed_dir = Path(source)
+    density_files = ("charge-density.dat", "charge-density.hdf5")
+    if not any((seed_dir / name).is_file() for name in density_files):
+        return False
+    destination = job_dir / f"{prefix}.save"
+    clone_save_light(seed_dir, destination)
+    return any((destination / name).is_file() for name in density_files)
 
 
 def full_record(beta: float, champion: Dict[str, Any], res: Dict[str, Any], used_seed: bool) -> Dict[str, Any]:
@@ -184,8 +200,10 @@ def full_record(beta: float, champion: Dict[str, Any], res: Dict[str, Any], used
         actual_total += int(champion.get("S4") or 0) + int(champion.get("M_after_S4") or 0)
     return {
         "beta": beta,
-        "success": bool(res.get("success")),
+        "success": bool(res.get("success")) and res["output_status"] == "converged" and res["returncode"] == 0,
         "stop": res.get("stop_reason"),
+        "returncode": res["returncode"],
+        "output_status": res["output_status"],
         "steps_only": int(res.get("steps", -1)),
         "actual_total": actual_total,
         "used_seed": used_seed,
@@ -194,9 +212,35 @@ def full_record(beta: float, champion: Dict[str, Any], res: Dict[str, Any], used
     }
 
 
+def reserve_output_dir(requested: Path) -> Path:
+    """Keep existing run evidence intact and atomically claim the new event log."""
+    requested.mkdir(parents=True, exist_ok=True)
+    prior_files = {"console.log", "events.jsonl", "summary.csv", "jobs", "plots", "seeds"}
+    prior = any(
+        path.name in prior_files or path.name.endswith("_recommendation.json") or path.name.startswith("bucket_")
+        for path in requested.iterdir()
+    )
+    candidate = requested
+    while True:
+        if prior:
+            candidate = Path(tempfile.mkdtemp(prefix="run-", dir=requested))
+        try:
+            (candidate / "events.jsonl").touch(exist_ok=False)
+            return candidate
+        except FileExistsError:
+            prior = True
+
+
 def run(args: Namespace) -> Dict[str, Any]:
-    cfg = effective_config(load_yaml(Path(args.config)), args.system)
+    cfg = effective_config(load_yaml(Path(args.config)) if args.config else {}, args.system)
     template_text, template_source = load_template(args.bench, args.template, args.system)
+    # Each probe changes cwd. Resolve pseudo paths while their original base is known.
+    env = cfg["qe"]["env"]
+    explicit_pseudo = env.get("ESPRESSO_PSEUDO") or os.environ.get("ESPRESSO_PSEUDO")
+    pseudo = explicit_pseudo or template_pseudo_dir(template_text)
+    if pseudo:
+        base = Path.cwd() if explicit_pseudo else Path(template_source).parent
+        env["ESPRESSO_PSEUDO"] = str((base / Path(pseudo).expanduser()).resolve())
     out_dir = Path(args.outdir).resolve()
     task = cfg.get("task", {})
     search = cfg.get("search", {})
@@ -208,14 +252,15 @@ def run(args: Namespace) -> Dict[str, Any]:
     if args.dry_run:
         return dry_run_payload(args, cfg, template_source, out_dir, beta_range, anchors)
 
+    out_dir = reserve_output_dir(out_dir)
     logger = EventLogger(out_dir, quiet=args.quiet)
-    logger.print(f"run_id={RUN_ID} system={args.system} template={template_source}")
+    logger.print(f"run_id={RUN_ID} system={args.system} template={template_source} outdir={out_dir}")
     logger.print(
         f"preset={cfg.get('preset')} strategy={search_strategy(cfg)} "
         f"beta_range=[{fmt_beta(beta_range[0], decimals)}, {fmt_beta(beta_range[1], decimals)}] "
         f"max_evals={search.get('max_evals')}"
     )
-    logger.log("run_start", system=args.system, template=template_source, config=str(Path(args.config).resolve()))
+    logger.log("run_start", system=args.system, template=template_source, config=str(Path(args.config).resolve()) if args.config else None)
     if search_strategy(cfg) == "bucket":
         return execute_bucket_search(args, cfg, template_text, template_source, out_dir, logger, beta_range, anchors)
     return execute_search(args, cfg, template_text, template_source, out_dir, logger, beta_range, anchors)
@@ -381,17 +426,25 @@ def finish_run(args: Namespace, cfg: Dict[str, Any], template_text: str, templat
     rec_path = out_dir / f"{args.system}_recommendation.json"
     rec_path.write_text(json.dumps(recommendation, indent=2), encoding="utf-8")
     logger.print(f"[done] recommendation={rec_path}")
-    if champion:
+    if recommendation["recommended_beta"] is not None:
         logger.print(f"[done] beta={fmt_beta(champion['beta'], int(cfg.get('search', {}).get('beta_decimals', 2)))} S4={champion['S4']}")
     print(json.dumps(recommendation, indent=2))
     return recommendation
 
 
 def build_recommendation(args: Namespace, cfg: Dict[str, Any], template_source: str, champion: Dict[str, Any] | None, full: Dict[str, Any] | None, summary_csv: Path, out_dir: Path, n_records: int, search_report: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    if champion is None:
+        status = "no_candidate"
+    elif full is None:
+        status = "probe_only"
+    else:
+        status = "verified" if full["success"] else "verification_failed"
     payload = {
         "system": args.system,
         "template": template_source,
-        "recommended_beta": champion.get("beta") if champion else None,
+        "outdir": str(out_dir),
+        "recommended_beta": champion["beta"] if status in ("probe_only", "verified") else None,
+        "recommendation_status": status,
         "target_residual_ry": float(cfg.get("task", {}).get("target_residual_ry", 1e-4)),
         "preset": cfg.get("preset"),
         "strategy": search_strategy(cfg),

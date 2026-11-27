@@ -1,85 +1,42 @@
 ---
 name: scf
-description: Diagnose Quantum ESPRESSO SCF setup and identify a usable mixing_beta range with the bundled scf_slim workflow. Use when the user asks about QE/pw.x, MPI or pseudopotential environment checks, SCF convergence trouble, guarded beta probing, negative-rho/divergence/oscillation/plateau behavior, or interpreting scf_slim outputs.
+description: Diagnose Quantum ESPRESSO pw.x SCF output, compare multiple logs, or test mixing_beta on an existing input. Use for electronic convergence, interrupted jobs, QE runtime checks, and guarded beta probes.
 ---
 
-# SCF V1.1
+# Diagnose a Quantum ESPRESSO SCF calculation
 
-Use this skill for first-pass Quantum ESPRESSO SCF diagnostics. Check whether the QE environment and input look healthy before spending runs on `mixing_beta`, then report a usable beta range with the evidence behind it. Make clear that beta probes use a cheap residual target and that the user should run a full SCF afterward at their required accuracy.
+The checkout entry point is `python3 <skill-dir>/scripts/scf_slim/run_scf.py`.
+An installed copy exposes the same commands through `scf-slim`. Write probe
+artifacts into the user's workspace.
 
-## Bundled Tool
+## Start with the available evidence
 
-The bundled tool lives under:
+1. Given an existing output, run `scf-slim diagnose FILE --json`. Given several
+   outputs, use `scf-slim compare FILE... --json` and inspect the individual logs
+   that need attention. Both commands accept gzip files.
+2. State the reported outcome for the latest invocation. Cite source lines for
+   the convergence verdict and last accuracy estimate, retaining its operator
+   and Ry units. A completion footer alone leaves the electronic outcome open.
+3. Describe a next action supported by the evidence. For example, when the log
+   says QE exhausted two iterations, check the iteration budget and threshold.
+   For runtime errors, inspect the reported routine and scheduler stderr.
+4. Use full calculation and template context before comparing beta values.
+   Ordinary SCF, ionic convergence and hybrid outer-loop convergence have
+   different criteria. Identify any calculation outside the parser's scope.
 
-```bash
-<skill-dir>/scripts/scf_slim
-```
+## Run a bounded probe
 
-Run commands from that directory so imports resolve naturally.
-Write outputs to the user's workspace or a temp directory; the installed skill
-directory may be read-only.
+When the user wants live calculation, install the probe extra, check the
+environment with `scf-slim probe --doctor`, and inspect the plan first.
 
-## Workflow
+~~~sh
+scf-slim probe --template input.in --outdir /path/to/workspace/scan --dry-run
+scf-slim probe --template input.in --outdir /path/to/workspace/scan
+~~~
 
-1. Run the environment doctor before expensive SCF probes:
-
-```bash
-cd <skill-dir>/scripts/scf_slim
-python3 run_scf.py --doctor --config configs/default.yaml
-```
-
-Use `--doctor-json` for machine-readable output, `--doctor-no-run-check` when only discovery is desired, and `--pw`, `--mpirun`, `--pseudo-dir`, `--search-root`, or `--np` to add explicit candidates.
-
-2. If doctor reports missing or unrunnable `pw.x`, missing pseudos, or likely MPI/runtime mismatch, fix that first. Do not start beta probing until the environment is plausible.
-
-3. For beta probing, keep the run diagnostic. Start from a broad practical range, let `scf_slim` evaluate its configured coarse anchors and deterministic bucket refinement, and avoid manual fine sweeps such as `0.57, 0.58, 0.59` unless the user explicitly asks for detailed sensitivity.
-
-The cheap beta-test target is `task.target_residual_ry` in the config. `task.probe_conv_thr_ry` is the QE `conv_thr` injected into probe inputs, and `task.final_conv_thr_ry` applies only to the optional final verification run.
-
-4. Run a diagnostic probe:
-
-```bash
-python3 run_scf.py \
-  --config configs/batio3_initial_beta.yaml \
-  --bench configs/benchmark.yaml \
-  --system BaTiO3 \
-  --outdir /path/to/workspace/out/BaTiO3_initial
-```
-
-For a custom system, use `--template /path/to/system_scf.in` instead of `--bench`.
-
-5. Summarize the result as a beta range, a practical default beta, and evidence from `summary.csv` and `console.log`. Remind the user to rerun a full SCF with their production `conv_thr` and physical convergence settings.
-
-## Interpretation Rules
-
-- Treat small differences between nearby beta values as numerical noise unless they are large and repeatable.
-- Prefer robust ranges, e.g. `0.50-0.60`, over precise claims like `0.59 is optimal`.
-- If all tested beta values fail or behave abnormally, do not recommend a beta. Tell the user this is likely an input, structure, pseudo, occupation, cutoff, k-point, charge, spin, or runtime problem.
-- If `negative rho` appears across beta values, prioritize checking structure, pseudo compatibility, `ecutrho`, and atom overlaps.
-- If many `c_bands not converged` messages appear, check occupations, smearing, metallicity, diagonalization settings, and `nbnd`.
-- If every beta oscillates, check occupations, `mixing_mode`, charge/spin setup, and initial magnetic moments.
-- If every beta times out but residuals decrease, the system may simply be large or the threshold too strict.
-
-## Outputs To Inspect
-
-- `summary.csv`: beta, success flag, S4, steps, stop reason, oscillation hits, and output paths.
-- `console.log`: probe order, bucket/coarse-search decisions, and final recommendation.
-- `<system>_recommendation.json`: recommendation and search report.
-- per-job `scf.out`: raw QE evidence for suspicious runs.
-
-## Scope
-
-This skill can:
-
-- discover and lightly validate `pw.x`, MPI launchers, and pseudopotential paths;
-- render QE SCF templates with candidate `mixing_beta` values;
-- run guarded SCF probes with divergence, oscillation, plateau, timeout, and negative-rho handling;
-- identify a usable beta range;
-- detect when the problem is probably not beta and should be debugged as an input/environment issue;
-- produce concise, evidence-backed recommendations.
-
-This skill should not:
-
-- claim a single exact best beta from a diagnostic run;
-- run precision beta sensitivity studies unless the user explicitly asks for them;
-- replace full convergence testing for cutoff, k-points, pseudos, occupations, or relax/vc-relax settings.
+A search can also use `--config` with a YAML file and `--bench` with a named
+`--system`. Inspect the generated inputs, `summary.csv`, individual `scf.out`
+files and `<system>_recommendation.json`. Report the tested beta values, cheap
+screening target, verification threshold and outcome. Give a recommendation
+only as far as the evidence supports it. Cutoff and k-point convergence need
+separate tests for the target property.

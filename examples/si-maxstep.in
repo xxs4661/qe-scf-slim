@@ -1,0 +1,28 @@
+&CONTROL
+  calculation = 'scf'
+  prefix = 'silicon'
+  pseudo_dir = './pseudos'
+  outdir = './tmp'
+  disk_io = 'none'
+/
+&SYSTEM
+  ibrav = 2
+  A = 5.431
+  nat = 2
+  ntyp = 1
+  ecutwfc = 45
+  ecutrho = 360
+  occupations = 'fixed'
+/
+&ELECTRONS
+  conv_thr = 1.0d-8
+  mixing_beta = 0.5
+  electron_maxstep = 2
+/
+ATOMIC_SPECIES
+Si 28.085 Si.pbe-n-rrkjus_psl.1.0.0.UPF
+ATOMIC_POSITIONS crystal
+Si 0.00 0.00 0.00
+Si 0.25 0.25 0.25
+K_POINTS automatic
+4 4 4 0 0 0

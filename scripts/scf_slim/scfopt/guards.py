@@ -54,8 +54,6 @@ class GuardCfg:
 class GuardState:
     last_big_impr_step: int = 0
     s_ref_per_step: Optional[float] = None
-    near_confirm_left: int = 0
-    near_last_k_for_confirm: int = -1
     env_logs: List[float] = field(default_factory=list)
     osc_transient_hits: int = 0
     osc_last_k: int = -1
@@ -79,8 +77,10 @@ def parse_new_lines(lines: List[str], residuals: List[float]) -> Tuple[int, Opti
         match = RES_RE.search(line)
         if match:
             try:
-                residuals.append(float(match.group(1).replace("D", "E").replace("d", "e")))
-                added += 1
+                value = float(match.group(1).replace("D", "E").replace("d", "e"))
+                if math.isfinite(value) and value >= 0:
+                    residuals.append(value)
+                    added += 1
             except ValueError:
                 pass
         match = ENE_RE.search(line)
@@ -166,6 +166,10 @@ def guard_evaluate_step(
     if wall_s >= cfg.episode_timeout_s:
         return "timeout", {"wall_s": wall_s}
 
+    near = near_target_stop(residuals, step, cfg)
+    if near:
+        return near
+
     y_env = env_logs(residuals)
     y_raw = raw_logs(residuals)
     if not y_raw:
@@ -173,9 +177,6 @@ def guard_evaluate_step(
     state.env_logs = y_env
 
     div_start, osc_grace = trigger_steps(cfg, max_steps_budget)
-    near = near_target_stop(y_env, step, cfg, state)
-    if near:
-        return near
     osc = oscillation_stop(y_raw, step, cfg, state, osc_grace)
     if osc:
         return osc
@@ -193,22 +194,13 @@ def trigger_steps(cfg: GuardCfg, max_steps_budget: int) -> Tuple[int, int]:
     return div_start, osc_grace
 
 
-def near_target_stop(y_env: List[float], step: int, cfg: GuardCfg, state: GuardState) -> Optional[Tuple[str, Dict[str, Any]]]:
-    if not cfg.near_stop_enabled or not y_env:
+def near_target_stop(residuals: List[float], step: int, cfg: GuardCfg) -> Optional[Tuple[str, Dict[str, Any]]]:
+    needed = 1 + max(0, cfg.near_confirm_tail)
+    if not cfg.near_stop_enabled or len(residuals) < needed:
         return None
-    target_log = _log10(cfg.target_residual_ry * cfg.near_margin_factor)
-    if y_env[-1] > target_log:
-        return None
-    if cfg.near_confirm_tail <= 0:
-        return "near_target_done", {"k": step, "y_last": y_env[-1], "e_last": 10 ** y_env[-1]}
-    if state.near_confirm_left <= 0:
-        state.near_confirm_left = int(cfg.near_confirm_tail)
-        state.near_last_k_for_confirm = step
-    elif step > state.near_last_k_for_confirm:
-        state.near_confirm_left -= 1
-        state.near_last_k_for_confirm = step
-        if state.near_confirm_left <= 0:
-            return "near_target_done", {"k": step, "y_last": y_env[-1], "e_last": 10 ** y_env[-1]}
+    limit = cfg.target_residual_ry * cfg.near_margin_factor
+    if all(0 <= value <= limit for value in residuals[-needed:]):
+        return "near_target_done", {"k": step, "y_last": _log10(residuals[-1]), "e_last": residuals[-1]}
     return None
 
 

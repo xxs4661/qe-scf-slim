@@ -2,10 +2,9 @@
 
 This directory contains the standalone Python CLI used by the `$scf` skill.
 The tool renders QE templates, runs guarded `pw.x` probes, and writes enough
-logs to explain why a beta range was chosen.
+logs to explain how each tested beta performed.
 
-The search is intentionally simple: coarse anchors first, deterministic bucket
-refinement second. Bad probes are stopped early when the residual history points
+The search is intentionally simple: coarse anchors first, then sequential or bucketed refinement. Bad probes are stopped early when the residual history points
 to divergence, oscillation, a plateau, timeout, or excessive negative rho.
 
 Probe runs are evaluated against `task.target_residual_ry`, a deliberately loose
@@ -29,7 +28,7 @@ full SCF at the convergence threshold required by the actual calculation.
 This does not run QE:
 
 ```bash
-cd scf_slim
+cd scripts/scf_slim
 python3 run_scf.py --doctor --doctor-no-run-check
 python3 run_scf.py --config configs/default.yaml --bench configs/benchmark.yaml --system Fe_bcc --outdir /path/to/workspace/out/smoke --dry-run
 python3 run_scf.py --bench configs/benchmark.yaml --list-systems
@@ -50,7 +49,7 @@ checks are lightweight, roughly `pw.x -h`, not an SCF calculation.
 
 ## Real run
 
-Edit `configs/default.yaml` first:
+Use `configs/default.yaml` to override the built-in defaults. Relevant settings include
 
 - `qe.pw`
 - `qe.mpirun` and `qe.np` if using MPI
@@ -67,7 +66,7 @@ exceptions under `overrides:`.
 Then run:
 
 ```bash
-cd scf_slim
+cd scripts/scf_slim
 MPLCONFIGDIR=/tmp/mpl-cache python3 run_scf.py \
   --config configs/default.yaml \
   --bench configs/benchmark.yaml \
@@ -91,6 +90,6 @@ That config uses bucket mode with an edge-neighbor check. If the best beta sits
 on a bucket boundary, the next probe moves inward before the tool gives up on
 the rest of the bucket.
 
-The recommendation is a beta-tuning result, not a production SCF result. Use the
+The candidate is based on the configured screening target. Use the
 chosen beta in a final standalone QE SCF run with your required `conv_thr` and
 fully converged physical settings.

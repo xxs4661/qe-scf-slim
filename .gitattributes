@@ -1,0 +1,2 @@
+# Preserve raw pw.x stdout, including Fortran's trailing padding.
+examples/*.out -text -whitespace
