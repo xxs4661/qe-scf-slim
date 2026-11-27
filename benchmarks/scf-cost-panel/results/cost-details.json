@@ -1,0 +1,301 @@
+{
+  "scope": "Post-protocol descriptive comparisons, three paired rounds. Seconds are serial process wall time.",
+  "interpretation": [
+    "Full A+B pays for two complete or capped cold runs per case, retaining any accepted result. No third production run or CLI is charged. Short probes were not measured.",
+    "The hindsight benchmark picks the fastest accepted measured A, B or E separately for each case and round. The selection uses outcomes and times unavailable before launch.",
+    "A positive signed difference means the first named policy costs more. Compare completions before interpreting any time difference.",
+    "Paid solver time counts every launch once. Incident policy replays borrow the matched normal material A for repair, already counted in physical launches.",
+    "Paid CLI time sums all repeated timed CLI child invocations including stand-alone latency controls. Version checks, Python audit, human time and queue time are outside this ledger."
+  ],
+  "paid_solver": {
+    "physical": {
+      "launches": 45,
+      "elapsed_s": 614.7771647492191
+    },
+    "incidents": {
+      "launches": 12,
+      "elapsed_s": 11.240251293289475
+    },
+    "all": {
+      "launches": 57,
+      "elapsed_s": 626.0174160425086
+    }
+  },
+  "paid_metering": {
+    "timed_cli_launches": 336,
+    "timed_cli_elapsed_s": 8.393335152,
+    "solver_plus_timed_cli_elapsed_s": 634.4107511945085
+  },
+  "observed_single_log_cli": {
+    "logs": 30,
+    "calls": 240,
+    "min_s": 0.022913875,
+    "median_s": 0.0244929165,
+    "max_s": 0.026353625,
+    "min_per_log_median_s": 0.023507062500000002,
+    "max_per_log_median_s": 0.025123
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "physical_tasks": 7,
+      "paid_solver": {
+        "physical": {
+          "launches": 15,
+          "elapsed_s": 204.47235912200995
+        },
+        "incidents": {
+          "launches": 4,
+          "elapsed_s": 3.7806451260112226
+        }
+      },
+      "full_A_plus_B": {
+        "launches": 14,
+        "elapsed_s": 124.8598487470299,
+        "complete": 7
+      },
+      "conditional_triage": {
+        "tasks": 7,
+        "complete": 7,
+        "manual_review": 0,
+        "launches": 8,
+        "solver_s": 90.61571878998075,
+        "cli_s": 0.0547889795,
+        "total_s": 90.67050776948075
+      },
+      "full_A_plus_B_minus_triage_s": 34.18934097754915,
+      "triage_minus_comparator_s": {
+        "direct40": 23.168128812483914,
+        "blind_lower": 0.054788979500003165,
+        "blind_extend": -56.44438156249613,
+        "direct80": -14.480923521534137,
+        "direct_low": 33.313037979447685
+      },
+      "comparator_completions": {
+        "direct40": 6,
+        "blind_lower": 7,
+        "blind_extend": 6,
+        "direct80": 6,
+        "direct_low": 7
+      },
+      "incident_targeted_minus_blind_then_repair_s": -1.808750834054262,
+      "hindsight_fastest_successful_measured_arm": {
+        "complete": 7,
+        "by_case": {
+          "al-fcc": {
+            "arm": "A",
+            "elapsed_s": 1.5424827079987153
+          },
+          "al111-stress": {
+            "arm": "B",
+            "elapsed_s": 23.11333983298391
+          },
+          "fe-bcc": {
+            "arm": "A",
+            "elapsed_s": 5.483473083004355
+          },
+          "mgo-rs": {
+            "arm": "B",
+            "elapsed_s": 2.1136773329926655
+          },
+          "na-bcc": {
+            "arm": "B",
+            "elapsed_s": 2.361306875012815
+          },
+          "na110-slab": {
+            "arm": "A",
+            "elapsed_s": 10.206043625017628
+          },
+          "si-diamond": {
+            "arm": "A",
+            "elapsed_s": 1.9842471670126542
+          }
+        },
+        "all_cases_elapsed_s": 46.804570624022745
+      },
+      "single_log_cli": {
+        "logs": 10,
+        "calls": 80,
+        "min_s": 0.022913875,
+        "median_s": 0.0244627915,
+        "max_s": 0.026353625,
+        "min_per_log_median_s": 0.023507062500000002,
+        "max_per_log_median_s": 0.024906395999999997
+      }
+    },
+    {
+      "round": 2,
+      "physical_tasks": 7,
+      "paid_solver": {
+        "physical": {
+          "launches": 15,
+          "elapsed_s": 205.29082500108052
+        },
+        "incidents": {
+          "launches": 4,
+          "elapsed_s": 3.7679985420545563
+        }
+      },
+      "full_A_plus_B": {
+        "launches": 14,
+        "elapsed_s": 124.9294772100402,
+        "complete": 7
+      },
+      "conditional_triage": {
+        "tasks": 7,
+        "complete": 7,
+        "manual_review": 0,
+        "launches": 8,
+        "solver_s": 90.10733683500439,
+        "cli_s": 0.054412958,
+        "total_s": 90.16174979300439
+      },
+      "full_A_plus_B_minus_triage_s": 34.767727417035815,
+      "triage_minus_comparator_s": {
+        "direct40": 23.287618916036706,
+        "blind_lower": 0.054412958000000344,
+        "blind_extend": -57.07372887500361,
+        "direct80": -15.278345458072465,
+        "direct_low": 32.10640345993187
+      },
+      "comparator_completions": {
+        "direct40": 6,
+        "blind_lower": 7,
+        "blind_extend": 6,
+        "direct80": 6,
+        "direct_low": 7
+      },
+      "incident_targeted_minus_blind_then_repair_s": -1.8458614795690096,
+      "hindsight_fastest_successful_measured_arm": {
+        "complete": 7,
+        "by_case": {
+          "al-fcc": {
+            "arm": "A",
+            "elapsed_s": 1.55206770892255
+          },
+          "al111-stress": {
+            "arm": "B",
+            "elapsed_s": 23.233205958036706
+          },
+          "fe-bcc": {
+            "arm": "A",
+            "elapsed_s": 5.525006041978486
+          },
+          "mgo-rs": {
+            "arm": "B",
+            "elapsed_s": 2.2145463750930503
+          },
+          "na-bcc": {
+            "arm": "B",
+            "elapsed_s": 2.4049993340158835
+          },
+          "na110-slab": {
+            "arm": "A",
+            "elapsed_s": 10.110115832998417
+          },
+          "si-diamond": {
+            "arm": "A",
+            "elapsed_s": 2.0381110419984907
+          }
+        },
+        "all_cases_elapsed_s": 47.078052293043584
+      },
+      "single_log_cli": {
+        "logs": 10,
+        "calls": 80,
+        "min_s": 0.023193458,
+        "median_s": 0.024546979,
+        "max_s": 0.025526209,
+        "min_per_log_median_s": 0.023876708,
+        "max_per_log_median_s": 0.025123
+      }
+    },
+    {
+      "round": 3,
+      "physical_tasks": 7,
+      "paid_solver": {
+        "physical": {
+          "launches": 15,
+          "elapsed_s": 205.0139806261286
+        },
+        "incidents": {
+          "launches": 4,
+          "elapsed_s": 3.6916076252236962
+        }
+      },
+      "full_A_plus_B": {
+        "launches": 14,
+        "elapsed_s": 124.7074800011469,
+        "complete": 7
+      },
+      "conditional_triage": {
+        "tasks": 7,
+        "complete": 7,
+        "manual_review": 0,
+        "launches": 8,
+        "solver_s": 90.05537016794551,
+        "cli_s": 0.054936979,
+        "total_s": 90.11030714694552
+      },
+      "full_A_plus_B_minus_triage_s": 34.59717285420139,
+      "triage_minus_comparator_s": {
+        "direct40": 23.045103645917507,
+        "blind_lower": 0.05493697900000427,
+        "blind_extend": -57.2613969790642,
+        "direct80": -15.302617312142146,
+        "direct_low": 32.46803064682662
+      },
+      "comparator_completions": {
+        "direct40": 6,
+        "blind_lower": 7,
+        "blind_extend": 6,
+        "direct80": 6,
+        "direct_low": 7
+      },
+      "incident_targeted_minus_blind_then_repair_s": -1.772739771164911,
+      "hindsight_fastest_successful_measured_arm": {
+        "complete": 7,
+        "by_case": {
+          "al-fcc": {
+            "arm": "A",
+            "elapsed_s": 1.5319301669951528
+          },
+          "al111-stress": {
+            "arm": "B",
+            "elapsed_s": 22.990166666917503
+          },
+          "fe-bcc": {
+            "arm": "A",
+            "elapsed_s": 5.533307041041553
+          },
+          "mgo-rs": {
+            "arm": "B",
+            "elapsed_s": 2.1194673751015216
+          },
+          "na-bcc": {
+            "arm": "B",
+            "elapsed_s": 2.4201065830420703
+          },
+          "na110-slab": {
+            "arm": "A",
+            "elapsed_s": 10.15631929191295
+          },
+          "si-diamond": {
+            "arm": "A",
+            "elapsed_s": 2.0119254590244964
+          }
+        },
+        "all_cases_elapsed_s": 46.76322258403525
+      },
+      "single_log_cli": {
+        "logs": 10,
+        "calls": 80,
+        "min_s": 0.023255667,
+        "median_s": 0.024444354,
+        "max_s": 0.026254,
+        "min_per_log_median_s": 0.023883063,
+        "max_per_log_median_s": 0.0250264375
+      }
+    }
+  ]
+}

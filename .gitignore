@@ -36,5 +36,6 @@ pseudos/
 *.UPF
 *.upf
 
-# Published figure generated from the Al(111) example stdout.
+# Published figures generated from recorded QE runs.
 !examples/al111/scf-accuracy.png
+!benchmarks/scf-cost-panel/scf-cost-panel.png

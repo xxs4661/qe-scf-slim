@@ -1,0 +1,1961 @@
+{
+  "software": "qe-scf-slim v0.4.0",
+  "repetitions": 3,
+  "cases": {
+    "si-diamond": {
+      "known": true,
+      "arms": {
+        "A": {
+          "accepted": 3,
+          "steps": [
+            7,
+            7,
+            7
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 2.0119254590244964,
+          "wall_s": [
+            1.9842471670126542,
+            2.0381110419984907,
+            2.0119254590244964
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            20,
+            20,
+            20
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 3.381523250020109,
+          "wall_s": [
+            3.341139000025578,
+            3.506898874999024,
+            3.381523250020109
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": 1.000000082740371e-08,
+      "max_paired_magnetization_spread_bohr": null
+    },
+    "al-fcc": {
+      "known": false,
+      "arms": {
+        "A": {
+          "accepted": 3,
+          "steps": [
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 1.5424827079987153,
+          "wall_s": [
+            1.5424827079987153,
+            1.55206770892255,
+            1.5319301669951528
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            6,
+            6,
+            6
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 1.7151885830098763,
+          "wall_s": [
+            1.7064527079928666,
+            1.754677457967773,
+            1.7151885830098763
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": 0.0,
+      "max_paired_magnetization_spread_bohr": null
+    },
+    "na-bcc": {
+      "known": false,
+      "arms": {
+        "A": {
+          "accepted": 3,
+          "steps": [
+            7,
+            7,
+            7
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 2.5066547500900924,
+          "wall_s": [
+            2.9525847499025986,
+            2.4202144590672106,
+            2.5066547500900924
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            7,
+            7,
+            7
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 2.4049993340158835,
+          "wall_s": [
+            2.361306875012815,
+            2.4049993340158835,
+            2.4201065830420703
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": 2.000000165480742e-08,
+      "max_paired_magnetization_spread_bohr": null
+    },
+    "fe-bcc": {
+      "known": false,
+      "arms": {
+        "A": {
+          "accepted": 3,
+          "steps": [
+            17,
+            17,
+            17
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 5.525006041978486,
+          "wall_s": [
+            5.483473083004355,
+            5.525006041978486,
+            5.533307041041553
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            37,
+            37,
+            37
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 10.761596874915995,
+          "wall_s": [
+            10.674807750037871,
+            10.761596874915995,
+            10.847656917059794
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": 1.0000007932831068e-08,
+      "max_paired_magnetization_spread_bohr": 0.0
+    },
+    "mgo-rs": {
+      "known": false,
+      "arms": {
+        "A": {
+          "accepted": 3,
+          "steps": [
+            33,
+            33,
+            33
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 3.3700895830988884,
+          "wall_s": [
+            3.3700895830988884,
+            3.433232375071384,
+            3.3662871250417084
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            15,
+            15,
+            15
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 2.1194673751015216,
+          "wall_s": [
+            2.1136773329926655,
+            2.2145463750930503,
+            2.1194673751015216
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": 4.000000330961484e-08,
+      "max_paired_magnetization_spread_bohr": null
+    },
+    "al111-stress": {
+      "known": true,
+      "arms": {
+        "A": {
+          "accepted": 0,
+          "steps": [
+            40,
+            40,
+            40
+          ],
+          "codes": [
+            "repeated_rebounds",
+            "repeated_rebounds",
+            "repeated_rebounds"
+          ],
+          "median_s": 41.958779666922055,
+          "wall_s": [
+            41.963458040961996,
+            41.795383416931145,
+            41.958779666922055
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            22,
+            22,
+            22
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 23.11333983298391,
+          "wall_s": [
+            23.11333983298391,
+            23.233205958036706,
+            22.990166666917503
+          ]
+        },
+        "E": {
+          "accepted": 0,
+          "steps": [
+            80,
+            80,
+            80
+          ],
+          "codes": [
+            "unconverged",
+            "unconverged",
+            "unconverged"
+          ],
+          "median_s": 80.30650062498171,
+          "wall_s": [
+            79.61251037498005,
+            80.36134779104032,
+            80.30650062498171
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": null,
+      "max_paired_magnetization_spread_bohr": null
+    },
+    "na110-slab": {
+      "known": false,
+      "arms": {
+        "A": {
+          "accepted": 3,
+          "steps": [
+            7,
+            7,
+            7
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 10.15631929191295,
+          "wall_s": [
+            10.206043625017628,
+            10.110115832998417,
+            10.15631929191295
+          ]
+        },
+        "B": {
+          "accepted": 3,
+          "steps": [
+            12,
+            12,
+            12
+          ],
+          "codes": [
+            "converged",
+            "converged",
+            "converged"
+          ],
+          "median_s": 14.168167124968022,
+          "wall_s": [
+            14.046746290987357,
+            14.17942145804409,
+            14.168167124968022
+          ]
+        }
+      },
+      "max_paired_energy_spread_ry": 1.0000007932831068e-08,
+      "max_paired_magnetization_spread_bohr": null
+    }
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "policies": {
+        "direct40": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 7,
+          "solver_s": 67.50237895699684,
+          "cli_s": 0.0,
+          "total_s": 67.50237895699684
+        },
+        "blind_lower": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 8,
+          "solver_s": 90.61571878998075,
+          "cli_s": 0.0,
+          "total_s": 90.61571878998075
+        },
+        "blind_extend": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 8,
+          "solver_s": 147.11488933197688,
+          "cli_s": 0.0,
+          "total_s": 147.11488933197688
+        },
+        "triage": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 8,
+          "solver_s": 90.61571878998075,
+          "cli_s": 0.0547889795,
+          "total_s": 90.67050776948075
+        },
+        "direct80": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 7,
+          "solver_s": 105.15143129101489,
+          "cli_s": 0.0,
+          "total_s": 105.15143129101489
+        },
+        "direct_low": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 7,
+          "solver_s": 57.357469790033065,
+          "cli_s": 0.0,
+          "total_s": 57.357469790033065
+        }
+      },
+      "holdout_solver_only": {
+        "direct40": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.554673749022186,
+          "cli_s": 0,
+          "total_s": 23.554673749022186
+        },
+        "blind_lower": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.554673749022186,
+          "cli_s": 0,
+          "total_s": 23.554673749022186
+        },
+        "blind_extend": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.554673749022186,
+          "cli_s": 0,
+          "total_s": 23.554673749022186
+        },
+        "triage": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.554673749022186,
+          "cli_s": 0,
+          "total_s": 23.554673749022186
+        },
+        "direct80": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.554673749022186,
+          "cli_s": 0,
+          "total_s": 23.554673749022186
+        },
+        "direct_low": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 30.902990957023576,
+          "cli_s": 0,
+          "total_s": 30.902990957023576
+        }
+      },
+      "paths": {
+        "si-diamond": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.9842471670126542,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.9842471670126542,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.9842471670126542,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.9842471670126542,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.9842471670126542,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 3.341139000025578,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "al-fcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5424827079987153,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5424827079987153,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5424827079987153,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5424827079987153,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5424827079987153,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 1.7064527079928666,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "na-bcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.9525847499025986,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.9525847499025986,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.9525847499025986,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.9525847499025986,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.9525847499025986,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 2.361306875012815,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "fe-bcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.483473083004355,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.483473083004355,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.483473083004355,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.483473083004355,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.483473083004355,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 10.674807750037871,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "mgo-rs": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3700895830988884,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3700895830988884,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3700895830988884,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3700895830988884,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3700895830988884,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 2.1136773329926655,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "al111-stress": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 41.963458040961996,
+            "accepted": false,
+            "final_code": "repeated_rebounds",
+            "needs_review": true
+          },
+          "blind_lower": {
+            "attempts": [
+              "A",
+              "B"
+            ],
+            "solver_s": 65.0767978739459,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A",
+              "E"
+            ],
+            "solver_s": 121.57596841594204,
+            "accepted": false,
+            "final_code": "unconverged",
+            "needs_review": true
+          },
+          "triage": {
+            "attempts": [
+              "A",
+              "B"
+            ],
+            "solver_s": 65.0767978739459,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "E"
+            ],
+            "solver_s": 79.61251037498005,
+            "accepted": false,
+            "final_code": "unconverged",
+            "needs_review": true
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 23.11333983298391,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "na110-slab": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.206043625017628,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.206043625017628,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.206043625017628,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.206043625017628,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.206043625017628,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 14.046746290987357,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        }
+      }
+    },
+    {
+      "round": 2,
+      "policies": {
+        "direct40": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 7,
+          "solver_s": 66.87413087696768,
+          "cli_s": 0.0,
+          "total_s": 66.87413087696768
+        },
+        "blind_lower": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 8,
+          "solver_s": 90.10733683500439,
+          "cli_s": 0.0,
+          "total_s": 90.10733683500439
+        },
+        "blind_extend": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 8,
+          "solver_s": 147.235478668008,
+          "cli_s": 0.0,
+          "total_s": 147.235478668008
+        },
+        "triage": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 8,
+          "solver_s": 90.10733683500439,
+          "cli_s": 0.054412958,
+          "total_s": 90.16174979300439
+        },
+        "direct80": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 7,
+          "solver_s": 105.44009525107685,
+          "cli_s": 0.0,
+          "total_s": 105.44009525107685
+        },
+        "direct_low": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 7,
+          "solver_s": 58.05534633307252,
+          "cli_s": 0.0,
+          "total_s": 58.05534633307252
+        }
+      },
+      "holdout_solver_only": {
+        "direct40": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.040636418038048,
+          "cli_s": 0,
+          "total_s": 23.040636418038048
+        },
+        "blind_lower": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.040636418038048,
+          "cli_s": 0,
+          "total_s": 23.040636418038048
+        },
+        "blind_extend": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.040636418038048,
+          "cli_s": 0,
+          "total_s": 23.040636418038048
+        },
+        "triage": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.040636418038048,
+          "cli_s": 0,
+          "total_s": 23.040636418038048
+        },
+        "direct80": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.040636418038048,
+          "cli_s": 0,
+          "total_s": 23.040636418038048
+        },
+        "direct_low": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 31.31524150003679,
+          "cli_s": 0,
+          "total_s": 31.31524150003679
+        }
+      },
+      "paths": {
+        "si-diamond": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0381110419984907,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0381110419984907,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0381110419984907,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0381110419984907,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0381110419984907,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 3.506898874999024,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "al-fcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.55206770892255,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.55206770892255,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.55206770892255,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.55206770892255,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.55206770892255,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 1.754677457967773,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "na-bcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.4202144590672106,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.4202144590672106,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.4202144590672106,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.4202144590672106,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.4202144590672106,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 2.4049993340158835,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "fe-bcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.525006041978486,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.525006041978486,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.525006041978486,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.525006041978486,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.525006041978486,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 10.761596874915995,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "mgo-rs": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.433232375071384,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.433232375071384,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.433232375071384,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.433232375071384,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.433232375071384,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 2.2145463750930503,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "al111-stress": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 41.795383416931145,
+            "accepted": false,
+            "final_code": "repeated_rebounds",
+            "needs_review": true
+          },
+          "blind_lower": {
+            "attempts": [
+              "A",
+              "B"
+            ],
+            "solver_s": 65.02858937496785,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A",
+              "E"
+            ],
+            "solver_s": 122.15673120797146,
+            "accepted": false,
+            "final_code": "unconverged",
+            "needs_review": true
+          },
+          "triage": {
+            "attempts": [
+              "A",
+              "B"
+            ],
+            "solver_s": 65.02858937496785,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "E"
+            ],
+            "solver_s": 80.36134779104032,
+            "accepted": false,
+            "final_code": "unconverged",
+            "needs_review": true
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 23.233205958036706,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "na110-slab": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.110115832998417,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.110115832998417,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.110115832998417,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.110115832998417,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.110115832998417,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 14.17942145804409,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        }
+      }
+    },
+    {
+      "round": 3,
+      "policies": {
+        "direct40": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 7,
+          "solver_s": 67.06520350102801,
+          "cli_s": 0.0,
+          "total_s": 67.06520350102801
+        },
+        "blind_lower": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 8,
+          "solver_s": 90.05537016794551,
+          "cli_s": 0.0,
+          "total_s": 90.05537016794551
+        },
+        "blind_extend": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 8,
+          "solver_s": 147.37170412600972,
+          "cli_s": 0.0,
+          "total_s": 147.37170412600972
+        },
+        "triage": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 8,
+          "solver_s": 90.05537016794551,
+          "cli_s": 0.054936979,
+          "total_s": 90.11030714694552
+        },
+        "direct80": {
+          "tasks": 7,
+          "complete": 6,
+          "manual_review": 1,
+          "launches": 7,
+          "solver_s": 105.41292445908766,
+          "cli_s": 0.0,
+          "total_s": 105.41292445908766
+        },
+        "direct_low": {
+          "tasks": 7,
+          "complete": 7,
+          "manual_review": 0,
+          "launches": 7,
+          "solver_s": 57.642276500118896,
+          "cli_s": 0.0,
+          "total_s": 57.642276500118896
+        }
+      },
+      "holdout_solver_only": {
+        "direct40": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.094498375081457,
+          "cli_s": 0,
+          "total_s": 23.094498375081457
+        },
+        "blind_lower": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.094498375081457,
+          "cli_s": 0,
+          "total_s": 23.094498375081457
+        },
+        "blind_extend": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.094498375081457,
+          "cli_s": 0,
+          "total_s": 23.094498375081457
+        },
+        "triage": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.094498375081457,
+          "cli_s": 0,
+          "total_s": 23.094498375081457
+        },
+        "direct80": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 23.094498375081457,
+          "cli_s": 0,
+          "total_s": 23.094498375081457
+        },
+        "direct_low": {
+          "tasks": 5,
+          "complete": 5,
+          "manual_review": 0,
+          "launches": 5,
+          "solver_s": 31.270586583181284,
+          "cli_s": 0,
+          "total_s": 31.270586583181284
+        }
+      },
+      "paths": {
+        "si-diamond": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0119254590244964,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0119254590244964,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0119254590244964,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0119254590244964,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.0119254590244964,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 3.381523250020109,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "al-fcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5319301669951528,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5319301669951528,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5319301669951528,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5319301669951528,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 1.5319301669951528,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 1.7151885830098763,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "na-bcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.5066547500900924,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.5066547500900924,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.5066547500900924,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.5066547500900924,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 2.5066547500900924,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 2.4201065830420703,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "fe-bcc": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.533307041041553,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.533307041041553,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.533307041041553,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.533307041041553,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 5.533307041041553,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 10.847656917059794,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "mgo-rs": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3662871250417084,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3662871250417084,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3662871250417084,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3662871250417084,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 3.3662871250417084,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 2.1194673751015216,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "al111-stress": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 41.958779666922055,
+            "accepted": false,
+            "final_code": "repeated_rebounds",
+            "needs_review": true
+          },
+          "blind_lower": {
+            "attempts": [
+              "A",
+              "B"
+            ],
+            "solver_s": 64.94894633383956,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A",
+              "E"
+            ],
+            "solver_s": 122.26528029190376,
+            "accepted": false,
+            "final_code": "unconverged",
+            "needs_review": true
+          },
+          "triage": {
+            "attempts": [
+              "A",
+              "B"
+            ],
+            "solver_s": 64.94894633383956,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "E"
+            ],
+            "solver_s": 80.30650062498171,
+            "accepted": false,
+            "final_code": "unconverged",
+            "needs_review": true
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 22.990166666917503,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        },
+        "na110-slab": {
+          "direct40": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.15631929191295,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_lower": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.15631929191295,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "blind_extend": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.15631929191295,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "triage": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.15631929191295,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct80": {
+            "attempts": [
+              "A"
+            ],
+            "solver_s": 10.15631929191295,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          },
+          "direct_low": {
+            "attempts": [
+              "B"
+            ],
+            "solver_s": 14.168167124968022,
+            "accepted": true,
+            "final_code": "converged",
+            "needs_review": false
+          }
+        }
+      }
+    }
+  ],
+  "incidents": [
+    {
+      "round": 1,
+      "cases": {
+        "si-short-budget": {
+          "code": "short_iteration_budget",
+          "targeted_accepted": true,
+          "blind_then_repair_accepted": true,
+          "targeted_solver_s": 3.528479250962846,
+          "blind_then_repair_solver_s": 5.012828167993575,
+          "blind_retry_s": 1.4843489170307294,
+          "repair_source": "si-diamond"
+        },
+        "fe-missing-upf": {
+          "code": "pseudopotential_error",
+          "targeted_accepted": true,
+          "blind_then_repair_accepted": true,
+          "targeted_solver_s": 5.861500666011125,
+          "blind_then_repair_solver_s": 6.235537208034657,
+          "blind_retry_s": 0.3740365420235321,
+          "repair_source": "fe-bcc"
+        }
+      },
+      "targeted_cli_s": 0.049634625,
+      "targeted_s": 9.43961454197397,
+      "blind_then_repair_s": 11.248365376028232,
+      "net_saved_s": 1.808750834054262
+    },
+    {
+      "round": 2,
+      "cases": {
+        "si-short-budget": {
+          "code": "short_iteration_budget",
+          "targeted_accepted": true,
+          "blind_then_repair_accepted": true,
+          "targeted_solver_s": 3.538539542001672,
+          "blind_then_repair_solver_s": 5.067840917035937,
+          "blind_retry_s": 1.5293013750342652,
+          "repair_source": "si-diamond"
+        },
+        "fe-missing-upf": {
+          "code": "pseudopotential_error",
+          "targeted_accepted": true,
+          "blind_then_repair_accepted": true,
+          "targeted_solver_s": 5.89755754196085,
+          "blind_then_repair_solver_s": 6.263274708995596,
+          "blind_retry_s": 0.3657171670347452,
+          "repair_source": "fe-bcc"
+        }
+      },
+      "targeted_cli_s": 0.0491570625,
+      "targeted_s": 9.485254146462523,
+      "blind_then_repair_s": 11.331115626031533,
+      "net_saved_s": 1.8458614795690096
+    },
+    {
+      "round": 3,
+      "cases": {
+        "si-short-budget": {
+          "code": "short_iteration_budget",
+          "targeted_accepted": true,
+          "blind_then_repair_accepted": true,
+          "targeted_solver_s": 3.5001742920139804,
+          "blind_then_repair_solver_s": 4.960603792103939,
+          "blind_retry_s": 1.4604295000899583,
+          "repair_source": "si-diamond"
+        },
+        "fe-missing-upf": {
+          "code": "pseudopotential_error",
+          "targeted_accepted": true,
+          "blind_then_repair_accepted": true,
+          "targeted_solver_s": 5.913896958110854,
+          "blind_then_repair_solver_s": 6.276236333185807,
+          "blind_retry_s": 0.36233937507495284,
+          "repair_source": "fe-bcc"
+        }
+      },
+      "targeted_cli_s": 0.050029104,
+      "targeted_s": 9.464100354124835,
+      "blind_then_repair_s": 11.236840125289746,
+      "net_saved_s": 1.772739771164911
+    }
+  ]
+}
